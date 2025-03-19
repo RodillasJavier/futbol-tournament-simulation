@@ -13,7 +13,7 @@ Design specifications for the implementation of our UCL-style futbol tournament.
     * createPlayer()
     * destroyPlayer()
     * scoreGoal()
-    * Assist()
+    * assist()
     * updateInjuryStatus()
 
 `Team` 

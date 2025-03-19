@@ -25,8 +25,55 @@ typedef struct Player
 /**
  * Create a new player with all of their attributes
  * 
- * 
+ * @param number on the back of the player's jersey
+ * @param position -> Pointer to the position of the player on the roster
+ * @param name -> Pointer to the last name of the player
+ * @param rating of the player (1 - 100)
  */
 Player* createPlayer(int number, const char* position, const char* name, int rating);
+
+/**
+ * Free up memory allocated for a player
+ * 
+ * @param pointer to the player we are freeing from memory
+ */
+void destroyPlayer(Player* player);
+
+/**
+ * Record a scored goal for a player
+ * 
+ * @param pointer to the player who scored a goal
+ */
+void scoreGoal(Player* player);
+
+/**
+ * Record an assist for a player
+ * 
+ * @param pointer to the player who recorded an assist
+ * @param bool representing the new injury status for the player (True for injured, False otherwise)
+ */
+void assist(Player* player, bool status);
+
+/**
+ * Update the injury status for a player who got injured
+ * 
+ * @param pointer to the player who got injured
+ */
+void updateInjuryStatus(Player* player);
+
+/**
+ * Print players information to stdout
+ * 
+ * @param pointer to the player we are interested in
+ */
+void printPlayer(const Player* player);
+
+/**
+ * Create a deep copy of a player from a source player to a 'destination' player pointer
+ * 
+ * @param pointer to our source player that we are copying
+ * @param pointer to our 'destination' player
+ */
+Player* copyPlayer(const Player* src, Player* dest);
 
 #endif /* PLAYER_H */
