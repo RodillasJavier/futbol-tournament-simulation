@@ -13,7 +13,7 @@ int main()
     Player* lionel_messi = createPlayer(10, "rw", "Messi", 93);
 
     // Print his information
-    printf("Initial player information-\n");
+    printf("Initial player information...\n");
     printPlayer(lionel_messi);
     printf("\n");
 

@@ -4,6 +4,20 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 
 
 
+## File Structure
+```
+├── DESIGN.md
+├── README.md
+├── src
+│   ├── player.c
+│   └── player.h
+└── tests
+    ├── test_player
+    └── test_player.c
+```
+
+
+
 ## Class Breakdown
 
 `Player`
@@ -81,6 +95,13 @@ Generates input for league play and knockout rounds based on drawing and league 
 
 Takes in teams, rosters & schedules and uses them as input for the program. Also in charge of output in the terminal? Main method here?
 
-## File Structure
 
-\* File structure information here *
+
+## Testing
+
+`player.c` + `player.h`
+
+We defined the test file `test_player.c` to test the different function in the **player** class. We run it in the terminal by navigating to the tests folder and running the command:
+
+    gcc -Wall -Wextra -I../src -o test_player test_player.c ../src/player.c
+    ./test_player
