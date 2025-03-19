@@ -51,16 +51,16 @@ void scoreGoal(Player* player);
  * Record an assist for a player
  * 
  * @param pointer to the player who recorded an assist
- * @param bool representing the new injury status for the player (True for injured, False otherwise)
  */
-void assist(Player* player, bool status);
+void assist(Player* player);
 
 /**
  * Update the injury status for a player who got injured
  * 
  * @param pointer to the player who got injured
+ * @param bool representing the new injury status for the player (True for injured, False otherwise)
  */
-void updateInjuryStatus(Player* player);
+void updateInjuryStatus(Player* player, bool status);
 
 /**
  * Print players information to stdout
@@ -75,6 +75,6 @@ void printPlayer(const Player* player);
  * @param pointer to our source player that we are copying
  * @param pointer to our 'destination' player
  */
-Player* copyPlayer(const Player* src, Player* dest);
+Player* copyPlayer(const Player* src, const Player* dest);
 
 #endif /* PLAYER_H */
