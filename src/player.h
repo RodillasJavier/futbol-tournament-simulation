@@ -75,6 +75,6 @@ void printPlayer(const Player* player);
  * @param pointer to our source player that we are copying
  * @param pointer to our 'destination' player
  */
-Player* copyPlayer(const Player* src, const Player* dest);
+Player* copyPlayer(const Player* src, Player* dest);
 
 #endif /* PLAYER_H */
