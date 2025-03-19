@@ -9,27 +9,45 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 `Player`
     
 * **Attributes**: number, position, name, rating, goals, assists, injuryStatus
-* **Methods**: scoreGoal(), Assist(), updateInjuryStatus()
+* **Methods**: 
+    * createPlayer()
+    * destroyPlayer()
+    * scoreGoal()
+    * Assist()
+    * updateInjuryStatus()
 
 `Team` 
     
 * **Attributes**: players (Roster via Array), schedule, record (W, L, D), goalDifferential, points, city, coach, homeStadium
-* **Methods**: playMatch(), updateRecord(), calculateGoalDifferential, calculatePoints(), updateRoster()
+* **Methods**: 
+    * playMatch()
+    * updateRecord()
+    * calculateGoalDifferential
+    * calculatePoints()
+    * updateRoster()
  
 `League`
 
 * **Attributes**: teams, region, leagueTable
-* **Methods**: generateSchedule(), simulateMatchDay(), updateStandings()
+* **Methods**: 
+    * generateSchedule()
+    * simulateMatchDay()
+    * updateStandings()
 
 `Match`
 
 * **Attributes**: homeTeam, awayTeam, score, scorers, date
-* **Methods**: simulateMatch(), recordResults()
+* **Methods**: 
+    * simulateMatch()
+    * recordResults()
 
 `Tournament`
 
 * **Attributes**: teams, bracket, rounds
-* **Methods**: drawTeams(), simulateKnockoutStage(), simulateFinal()
+* **Methods**: 
+    * drawTeams()
+    * simulateKnockoutStage()
+    * simulateFinal()
 
 
 
