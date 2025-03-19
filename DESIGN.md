@@ -22,6 +22,8 @@ Design specifications for the implementation of our UCL-style futbol tournament.
     
 * **Attributes**: players (Roster via Array), schedule, record (W, L, D), goalDifferential, points, city, coach, homeStadium
 * **Methods**: 
+    * createTeam()
+    * destroyTeam()
     * playMatch()
     * updateRecord()
     * calculateGoalDifferential
@@ -78,3 +80,7 @@ Generates input for league play and knockout rounds based on drawing and league 
 ### File I/O module: 
 
 Takes in teams, rosters & schedules and uses them as input for the program. Also in charge of output in the terminal? Main method here?
+
+## File Structure
+
+\* File structure information here *

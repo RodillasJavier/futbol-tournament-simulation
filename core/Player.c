@@ -6,12 +6,12 @@
 
 /**
  * @author Javier A. Rodillas
- * @details Class implementation of our Player class/struct
+ * @details Class implementation of our 'Player' class/struct
  */
 
-/**
- * Create a new player with all of their attributes
- */
+/* METHODS */
+
+// Create a new player with all of their attributes
 Player* createPlayer(int number, const char* position, const char* name, int rating)
 {
     // Allocate memory for a player
@@ -42,9 +42,7 @@ Player* createPlayer(int number, const char* position, const char* name, int rat
     return player;
 }
 
-/**
- * Free up memory allocated for a player
- */
+// Free up memory allocated for a player
 void destroyPlayer(Player* player)
 {
     if (player != NULL) {
@@ -52,9 +50,7 @@ void destroyPlayer(Player* player)
     }
 }
 
-/**
- * Record a scored goal for a player
- */
+// Record a scored goal for a player
 void scoreGoal(Player* player)
 {
     if (player != NULL)
@@ -64,9 +60,7 @@ void scoreGoal(Player* player)
     
 }
 
-/**
- * Record an assist for a player
- */
+// Record an assist for a player
 void assist(Player* player)
 {
     if (player != NULL)
@@ -75,9 +69,7 @@ void assist(Player* player)
     }
 }
 
-/**
- * Update the injury status for a player who got injured
- */
+// Update the injury status for a player who got injured
 void updateInjuryStatus(Player* player, bool status)
 {
     if (player != NULL)
@@ -86,9 +78,7 @@ void updateInjuryStatus(Player* player, bool status)
     }
 }
 
-/**
- * Print players information to stdout
- */
+// Print players information to stdout
 void printPlayer(const Player* player)
 {
     if (player != NULL)
@@ -116,9 +106,7 @@ void printPlayer(const Player* player)
     }
 }
 
-/**
- * Create a deep copy of a player from a source player to a 'destination' player pointer
- */
+// Create a deep copy of a player from a source player to a 'destination' player pointer
 Player* copyPlayer(const Player* src, Player* dest)
 {
     // Null checking player
