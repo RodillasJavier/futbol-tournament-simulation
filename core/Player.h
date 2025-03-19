@@ -6,12 +6,13 @@
  * @details Header file for the Player class file
  */
 
-#include <stdbool.h>
+ #include <stdbool.h>
 
 /**
  * Player @struct representing a football player
  */
-typedef struct Player
+
+typedef struct
 {
     int number;         // Number on the back of their jersey
     char position[4];   // Position can be represented by atmost a 3 character string (extra byte for null terminator)
@@ -20,7 +21,7 @@ typedef struct Player
     int goals;          // Goals scored
     int assists;        // Assists provided
     bool injuryStatus;  // True if injured, False otherwise
-};
+} Player;
 
 /**
  * Create a new player with all of their attributes

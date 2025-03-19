@@ -15,6 +15,8 @@ Design specifications for the implementation of our UCL-style futbol tournament.
     * scoreGoal()
     * assist()
     * updateInjuryStatus()
+    * printPlayer()
+    * copyPlayer()
 
 `Team` 
     
