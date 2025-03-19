@@ -20,6 +20,7 @@ Player* createPlayer(int number, const char* position, const char* name, int rat
     // Null checking player
     if (player == NULL) {
         fprintf(stderr, "Error: failed to allocate memory for player\n");
+        return NULL;
     }
 
     // Initialize player attributes
@@ -31,7 +32,7 @@ Player* createPlayer(int number, const char* position, const char* name, int rat
 
     // Name
     strncpy(player -> name, name, sizeof(player -> name) - 1);
-    player -> name[sizeof(player -> position) - 1] = '\0';  // Ensure null termination
+    player -> name[sizeof(player -> name) - 1] = '\0';  // Ensure null termination
 
     player -> rating = rating;      // Rating
     player -> goals = 0;            // Goals
@@ -124,12 +125,14 @@ Player* copyPlayer(const Player* src, Player* dest)
     if (src == NULL)
     {
         fprintf(stderr, "Error: null pointer to a 'source' player when trying to make a copy.\n");
+        return NULL;
     }
     
     // Null checking player
     if (dest == NULL)
     {
         fprintf(stderr, "Error: null pointer to a 'destination' player when trying to make a copy.\n");
+        return NULL;
     }
 
     // Copying Attributes
@@ -147,4 +150,6 @@ Player* copyPlayer(const Player* src, Player* dest)
     dest -> goals = src -> goals;               // Goals
     dest -> assists = src -> assists;           // Assists
     dest -> injuryStatus = src -> injuryStatus; // Injury Status, default to false upon creation
+
+    return dest;
 }
