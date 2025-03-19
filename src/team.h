@@ -48,11 +48,19 @@ typedef struct
  */
 Team* createTeam(char name[50], char city[50], char coach[50], char homeStadium[50]);
 
-// destroyTeam()
-// playMatch()
+/**
+ * Destroy & free all memory allocated for our team
+ * 
+ * @param pointer to the team that we want to 'destroy'
+ */
+void destroyTeam(Team* team);
+
+// add player
+// remove player
 // updateRecord()
 // calculateGoalDifferential
-// calculatePoints()
-// updateRoster()
+// get player by number
+// get team rating
+// print team
 
 #endif  // TEAM_H
