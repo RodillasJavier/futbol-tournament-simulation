@@ -34,13 +34,25 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 
 `Team` 
     
-* **Attributes**: players (Roster via Array), schedule, record (W, L, D), goalDifferential, points, city, coach, homeStadium
+* **Attributes**: 
+    * players (team roster)
+    * schedule
+    * record
+        * wins
+        * losses
+        * draws
+    * goalDifferential
+    * points
+    * city
+    * coach
+    * homeStadium
+    * name
 * **Methods**: 
     * createTeam()
     * destroyTeam()
     * playMatch()
     * updateRecord()
-    * calculateGoalDifferential
+    * calculateGoalDifferential()
     * calculatePoints()
     * updateRoster()
  
