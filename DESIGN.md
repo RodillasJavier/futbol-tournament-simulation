@@ -16,7 +16,6 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 │   └── team.h
 └── tests
     ├── test_player.c
-    ├── test_team
     └── test_team.c
 ```
 
