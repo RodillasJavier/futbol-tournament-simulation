@@ -4,6 +4,7 @@
  */
 
 #include "team.h"
+#include "player.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +26,7 @@ Team* createTeam(const char* name, const char* city, const char* coach, const ch
         fprintf(stderr, "Error: failed to allocate memory for a team\n");
     }
 
-    // Initialize player attributes:
+    // Initialize team attributes:
 
     // Name of the club
     strncpy(team -> name, name, sizeof(team -> name) - 1);
@@ -171,7 +172,7 @@ bool removePlayer(Team* team, int number)
         {
             // Remember the index that we found him at
             playerIndex = i;
-            break;
+            // break;
         }
     }
     
@@ -291,10 +292,10 @@ void calculateGoalDifferential(Team* team, int goalsScored, int goalsConceded)
 float calculateTeamRating(Team* team)
 {
     // Null check team
-    if (team)
+    if (team == NULL)
     {
         fprintf(stderr, "Error: Tried to calculate rating of a team that doesn't exist.\n");
-        return;
+        return 0.0;
     }
 
     // Check for if/when a team has 0 players (avoid division by 0)
@@ -322,7 +323,7 @@ void printTeam(const Team* team, bool showPlayers)
     if (team == NULL)
     {
         fprintf(stderr, "Error: failed to allocate memory for a player.\n");
-        return NULL;
+        return;
     }
     
     // Name, city, coach & stadium
