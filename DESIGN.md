@@ -152,14 +152,14 @@ Takes in teams, rosters & schedules and uses them as input for the program. Also
 
 ## Testing
 
-`player.c` + `player.h`
+**Player class**: `player.c` + `player.h`
 
 We defined the test file `test_player.c` to test the different function in the **player** class. We run it in the terminal by navigating to the tests folder and running the command:
 
     gcc -Wall -Wextra -I../src -o test_player test_player.c ../src/player.c
     ./test_player
 
-`team.c` + `team.h`
+**Team class**: `team.c` + `team.h`
 
 We defined the test file `test_team.c` to test the different function in the **team** class. We run it in the terminal by navigating to the tests folder and running the command:
 
