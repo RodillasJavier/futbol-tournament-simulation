@@ -21,7 +21,7 @@ Player* createPlayer(int number, const char* position, const char* name, int rat
 
     // Null checking player
     if (player == NULL) {
-        fprintf(stderr, "Error: failed to allocate memory for player\n");
+        fprintf(stderr, "Error: failed to allocate memory for a player\n");
         return NULL;
     }
 

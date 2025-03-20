@@ -22,6 +22,7 @@ typedef struct
     Player** players;       // Array of pointers to Player structs
     int numPlayers;         // Number of players currently on the team
     int maxPlayers;         // Maximum number of players a team can have
+    
     float rating;           // Overall rating (average) of the team
 
     int* schedule;          // Array of indices (of teams) in the order they play
