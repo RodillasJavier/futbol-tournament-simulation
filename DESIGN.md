@@ -6,13 +6,14 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 
 ## File Structure
 ```
+.
 ├── DESIGN.md
 ├── README.md
 ├── src
 │   ├── player.c
-│   └── player.h
+│   ├── player.h
+│   └── team.h
 └── tests
-    ├── test_player
     └── test_player.c
 ```
 

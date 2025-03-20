@@ -21,6 +21,7 @@ typedef struct
     Player** players;       // Array of pointers to Player structs
     int numPlayers;         // Number of players currently on the team
     int maxPlayers;         // Maximum number of players a team can have
+    float rating;             // Overall rating (average) of the team
 
     int* schedule;          // Array of indices (of teams) in the order they play
     int scheduleLength;     // Length of schedule (alternatively, number of games)
@@ -46,7 +47,7 @@ typedef struct
  * 
  * @return pointer to the new Team we just created
  */
-Team* createTeam(char name[50], char city[50], char coach[50], char homeStadium[50]);
+Team* createTeam(const char* name, const char* city, const char* coach, const char* homeStadium);
 
 /**
  * Destroy & free all memory allocated for our team
@@ -55,12 +56,67 @@ Team* createTeam(char name[50], char city[50], char coach[50], char homeStadium[
  */
 void destroyTeam(Team* team);
 
-// add player
-// remove player
-// updateRecord()
-// calculateGoalDifferential
-// get player by number
-// get team rating
-// print team
+/**
+ * Add a player to a team
+ * 
+ * @param Team to add a player to
+ * @param Player to add to our team
+ * 
+ * @return bool (true => added to team, false otherwise)
+ */
+bool addPlayer(Team* team, const Player* player);
+
+/**
+ * Remove a specific player from a team
+ * 
+ * @param Team to remove a player from
+ * @param int jersery number of the player we want to remove from the team
+ * 
+ * @return bool (true => removed from team, false otherwise)
+ */
+bool removePlayer(Team* team, int number);
+
+/**
+ * Get a player by their jersey number
+ * 
+ * @param Team that we are searching in
+ * @param int jersey number that we are looking for
+ */
+Player* getPlayerByNumber(const Team* team, int number);
+
+
+/**
+ * Update the record of a team
+ * 
+ * @param Team that we want to update the record of
+ * @param bool win
+ * @param bool loss
+ * @param bool draw
+ */
+void updateRecord(Team* team, bool win, bool loss, bool draw);
+
+/**
+ * Calculate the goal differential based on the number of goals scored & conceded
+ * 
+ * @param Team that we are calculating the differential of
+ * @param int goalsScored
+ * @param int goalsConceded
+ */
+void calculateGoalDifferential(Team* team, int goalsScored, int goalsConceded);
+
+/**
+ * Calculate the teams overall rating (based on team average)
+ * 
+ * @param Team that we are calculating the rating of
+ */
+float calculateTeamRating(Team* team);
+
+/**
+ * Print the information of a Team
+ * 
+ * @param Team that we are interested in\
+ * @param bool showPlayers (true => print roster, false => exclude roster)
+ */
+void printTeam(const Team* team, bool showPlayers);
 
 #endif  // TEAM_H
