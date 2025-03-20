@@ -21,7 +21,7 @@ Player* createPlayer(int number, const char* position, const char* name, int rat
 
     // Null checking player
     if (player == NULL) {
-        fprintf(stderr, "Error: failed to allocate memory for a player\n");
+        fprintf(stderr, "Error: failed to allocate memory for a player.\n");
         return NULL;
     }
 
@@ -100,7 +100,7 @@ void printPlayer(const Player* player)
 
         fprintf(
             stdout, 
-            "%s, number %d: \n\t%d overall %s \n\t%d Goals, %d Assists \n\tInjury Status: %s\n", 
+            "%s, number %d: \n\t%d overall %s \n\t%d Goals, %d Assists \n\tInjury Status: %s.\n", 
             player -> name, player -> number, player -> rating, 
             player -> position, player -> goals, player -> assists, 
             injuryReport
