@@ -122,3 +122,10 @@ We defined the test file `test_player.c` to test the different function in the *
 
     gcc -Wall -Wextra -I../src -o test_player test_player.c ../src/player.c
     ./test_player
+
+`team.c` + `team.h`
+
+We defined the test file `test_team.c` to test the different function in the **team** class. We run it in the terminal by navigating to the tests folder and running the command:
+
+    gcc -Wall -Wextra -I../src -o test_team test_team.c ../src/team.c ../src/player.c
+    ./test_team
