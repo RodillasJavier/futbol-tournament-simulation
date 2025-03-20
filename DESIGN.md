@@ -23,8 +23,8 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 
 ## Class Breakdown
 
-`Player`
-    
+### Player
+
 * **Attributes**: 
     * number
     * position
@@ -49,8 +49,9 @@ Design specifications for the implementation of our UCL-style futbol tournament.
     * printPlayer()
     * copyPlayer()
 
-`Team` 
-    
+
+### Team
+
 * **Attributes**: 
     * players/team roster
     * schedule `Set by the league`
@@ -77,7 +78,8 @@ Design specifications for the implementation of our UCL-style futbol tournament.
     * calculateGoalDifferential()
     * printTeam()
 
-`League`
+
+### League
 
 * **Attributes**: teams, region, leagueTable
 * **Methods**: 
@@ -86,14 +88,32 @@ Design specifications for the implementation of our UCL-style futbol tournament.
     * simulateMatchDay()
     * updateStandings()
 
-`Match`
 
-* **Attributes**: homeTeam, awayTeam, score, scorers, date
+### Match
+
+* **Attributes**: 
+    * homeTeam
+    * awayTeam
+    * score
+    * scorers
+    * scorerTeamIndices
+    * scoringMinutes
+    * numScorers
+    * date
+    * isCompleted
+
 * **Methods**: 
+    * createMatch()
+    * destroyMatch()
     * simulateMatch()
-    * recordResults()
+    * recordGoal()
+    * printMatchResult()
+    * printMatchReport()
+    * updateTeamRecords()
+    * getMatchWinner()
 
-`Tournament`
+
+### Tournament
 
 * **Attributes**: teams, bracket, rounds
 * **Methods**: 
