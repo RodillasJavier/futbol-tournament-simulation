@@ -25,7 +25,21 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 
 `Player`
     
-* **Attributes**: number, position, name, rating, goals, assists, injuryStatus
+* **Attributes**: 
+    * number
+    * position
+        * goal keeper - **gk**
+        * center back - **cb**
+        * full backs - **rb, lb, rwb, lwb**
+        * center midfield - **cm, cdm, cam**
+        * winger - **rm, lm, w, lw**
+        * forward - **st, cf**
+    * name
+    * rating
+    * goals
+    * assists
+    * injuryStatus
+
 * **Methods**: 
     * createPlayer()
     * destroyPlayer()
@@ -55,7 +69,8 @@ Design specifications for the implementation of our UCL-style futbol tournament.
     * createTeam()
     * destroyTeam()
     * addPlayer()
-    * removePlayer()
+    * removePlayerByNumber()
+    * removePlayerByName()
     * getPlayerByNumber()
     * getTeamRating()
     * updateRecord()
