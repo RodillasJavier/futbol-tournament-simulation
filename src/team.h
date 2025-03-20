@@ -3,10 +3,11 @@
 
 /**
  * @author Javier A. Rodillas
- * @details Header file for the Player class file
+ * @details Header file for the team class file
  */
 
 #include "player.h"
+#include <stdbool.h>
 
 /**
  * Team @struct to represent a club football team
@@ -21,7 +22,7 @@ typedef struct
     Player** players;       // Array of pointers to Player structs
     int numPlayers;         // Number of players currently on the team
     int maxPlayers;         // Maximum number of players a team can have
-    float rating;             // Overall rating (average) of the team
+    float rating;           // Overall rating (average) of the team
 
     int* schedule;          // Array of indices (of teams) in the order they play
     int scheduleLength;     // Length of schedule (alternatively, number of games)

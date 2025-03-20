@@ -1,13 +1,15 @@
+/**
+ * @author Javier A. Rodillas
+ * @details Class implementation of our 'Player' class/struct
+ */
+
 #include "player.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/**
- * @author Javier A. Rodillas
- * @details Class implementation of our 'Player' class/struct
- */
+
 
 /* METHODS */
 
