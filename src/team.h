@@ -73,20 +73,33 @@ void destroyTeam(Team* team);
 bool addPlayer(Team* team, const Player* player);
 
 /**
- * Remove a specific player from a team
+ * Remove a specific player from a team, searching for them by number
  * 
  * @param Team to remove a player from
  * @param int jersery number of the player we want to remove from the team
  * 
  * @return bool (true => removed from team, false otherwise)
  */
-bool removePlayer(Team* team, int number);
+bool removePlayerByNumber(Team* team, int number);
+
+/**
+ * Remove a specific player from a team, searching for them by name
+ * 
+ * @param Team to remove a player from
+ * @param name of the player that we are looking to remove from the team
+ * 
+ * @return bool (true => removed from team, false otherwise)
+ */
+bool removePlayerByName(Team* team, char* name);
 
 /**
  * Get a player by their jersey number
  * 
  * @param Team that we are searching in
  * @param int jersey number that we are looking for
+ * 
+ * @return  pointer to the player that we have found. CAUTION changing this 
+ *          player affects the original player that it points at
  */
 Player* getPlayerByNumber(const Team* team, int number);
 

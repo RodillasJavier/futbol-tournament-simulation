@@ -73,9 +73,15 @@ int main()
     printf("Team record after loss: %d-%d-%d (W-L-D), Points: %d\n", 
         barca->wins, barca->losses, barca->draws, barca->points);
 
-    // Test removing a player
+    // Test removing a player by their number
     printf("\nRemoving a player with number 19 (seniority)...\n");
-    removePlayer(barca, 19);
+    removePlayerByNumber(barca, 19);
+    printf("\nTeam after removal...\n");
+    printTeam(barca, true);
+
+    // Test removing a player by their number
+    printf("\nRemoving a player with name Raphael Dias Belloli (seniority)...\n");
+    removePlayerByName(barca, raphinha -> name);
     printf("\nTeam after removal...\n");
     printTeam(barca, true);
 

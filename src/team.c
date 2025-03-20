@@ -153,8 +153,8 @@ bool addPlayer(Team* team, const Player* player)
     return true;
 }
 
-// Remove a specific player from a team
-bool removePlayer(Team* team, int number)
+// Remove a specific player from a team, searching for them by number
+bool removePlayerByNumber(Team* team, int number)
 {
     // Null check team
     if (team == NULL)
@@ -172,7 +172,7 @@ bool removePlayer(Team* team, int number)
         {
             // Remember the index that we found him at
             playerIndex = i;
-            // break;
+            break;
         }
     }
     
@@ -193,6 +193,58 @@ bool removePlayer(Team* team, int number)
         team -> players[i] = team -> players[i + 1];
     }
 
+    // Update the number of players on the team
+    team -> numPlayers--;
+
+    // Re-calculate the team rating
+    team -> rating = calculateTeamRating(team);
+
+    return true;
+}
+
+// Remove a specific player from a team, searching for them by name
+bool removePlayerByName(Team* team, char* name)
+{
+    // Null check team
+    if (team == NULL)
+    {
+        fprintf(stderr, "Error: Trying to add a player from a team that does not exist.\n");
+        return false;
+    }
+    
+
+    // Find player with given name
+    int playerIndex = -1;
+    for (int i = 0; i < team -> numPlayers; i++)
+    {
+        int isTheSame = -1;
+        isTheSame = strcmp(team -> players[i] -> name, name);
+        // If we find a player with the given name
+        if (isTheSame == 0)
+        {
+            // Remember the index that we found him at
+            playerIndex = i;
+            break;
+        }
+    }
+    
+    // If there is no player with the given name, give error
+    if (playerIndex < 0)
+    {
+        fprintf(stderr, "Error: There was no player found with the name %s on %s.\n", 
+            name, team -> name);
+        return false;
+    }
+    
+    // Free the OLD player with the number
+    destroyPlayer(team -> players[playerIndex]);
+
+    // Shift players in roster to fill the gap
+    for (int i = playerIndex; i < team -> numPlayers - 1; i++)
+    {
+        team -> players[i] = team -> players[i + 1];
+    }
+    
     // Update the number of players on the team
     team -> numPlayers--;
 
