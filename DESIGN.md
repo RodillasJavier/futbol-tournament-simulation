@@ -105,7 +105,6 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 * **Methods**: 
     * createMatch()
     * destroyMatch()
-    * simulateMatch()
     * recordGoal()
     * printMatchResult()
     * printMatchReport()
