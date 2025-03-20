@@ -19,19 +19,23 @@ typedef struct
     char coach[50];         // Name of the head coach
     char homeStadium[50];   // Name of the home stadium
 
+    // Roster
     Player** players;       // Array of pointers to Player structs
     int numPlayers;         // Number of players currently on the team
     int maxPlayers;         // Maximum number of players a team can have
-    
+
     float rating;           // Overall rating (average) of the team
 
+    // Schedule
     int* schedule;          // Array of indices (of teams) in the order they play
     int scheduleLength;     // Length of schedule (alternatively, number of games)
 
+    // Record
     int wins;               // Games won
     int losses;             // Games lost
     int draws;              // Games drawn
 
+    // Goals
     int goalsScored;        // Total scored on opposing teams
     int goalsConceded;      // Total allowed by opposing teams
     int goalDifferential;   // Result of (goalsScored - goalsConceded)
@@ -88,7 +92,7 @@ Player* getPlayerByNumber(const Team* team, int number);
 
 
 /**
- * Update the record of a team
+ * Update the record & points of a team
  * 
  * @param Team that we want to update the record of
  * @param bool win

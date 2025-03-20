@@ -43,7 +43,7 @@ Design specifications for the implementation of our UCL-style futbol tournament.
         * losses
         * draws
     * goalDifferential
-    * points `Calculated by the league`
+    * points
     * city
     * coach
     * homeStadium
