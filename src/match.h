@@ -18,13 +18,15 @@ typedef struct {
     // Score
     int homeScore;
     int awayScore;
+    int numScorers;
     Player** scorers;           // Array of pointers to players who have scored
     int* scorerTeamIndices;     // Array of indices representing for what team the ith goal was for (0 => home, 1 => away)
     int* scoringMinutes;
-    int numScorers;
 
     // Game status
     char* date[20];
+
+    // Match status
     bool isCompleted;
 } Match;
 

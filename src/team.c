@@ -4,7 +4,6 @@
  */
 
 #include "team.h"
-#include "player.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +22,8 @@ Team* createTeam(const char* name, const char* city, const char* coach, const ch
     // Null checking team
     if (team == NULL)
     {
-        fprintf(stderr, "Error: failed to allocate memory for a team\n");
+        fprintf(stderr, "Error: failed to allocate memory for a team.\n");
+        return NULL;
     }
 
     // Initialize team attributes:
