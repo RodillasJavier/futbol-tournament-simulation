@@ -12,9 +12,12 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 ├── src
 │   ├── player.c
 │   ├── player.h
+│   ├── team.c
 │   └── team.h
 └── tests
-    └── test_player.c
+    ├── test_player.c
+    ├── test_team
+    └── test_team.c
 ```
 
 
