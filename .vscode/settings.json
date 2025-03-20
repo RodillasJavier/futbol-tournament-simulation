@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "sstream": "c"
+        "sstream": "c",
+        "__node_handle": "c",
+        "stdbool.h": "c"
     }
 }

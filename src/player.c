@@ -1,13 +1,15 @@
+/**
+ * @author Javier A. Rodillas
+ * @details Class implementation of our 'Player' class/struct
+ */
+
 #include "player.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-/**
- * @author Javier A. Rodillas
- * @details Class implementation of our 'Player' class/struct
- */
+
 
 /* METHODS */
 
@@ -19,7 +21,7 @@ Player* createPlayer(int number, const char* position, const char* name, int rat
 
     // Null checking player
     if (player == NULL) {
-        fprintf(stderr, "Error: failed to allocate memory for player\n");
+        fprintf(stderr, "Error: failed to allocate memory for a player\n");
         return NULL;
     }
 

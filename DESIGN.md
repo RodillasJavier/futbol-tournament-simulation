@@ -6,13 +6,14 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 
 ## File Structure
 ```
+.
 ├── DESIGN.md
 ├── README.md
 ├── src
 │   ├── player.c
-│   └── player.h
+│   ├── player.h
+│   └── team.h
 └── tests
-    ├── test_player
     └── test_player.c
 ```
 
@@ -35,8 +36,8 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 `Team` 
     
 * **Attributes**: 
-    * players (team roster)
-    * schedule
+    * players/team roster
+    * schedule `Set by the league`
     * record
         * wins
         * losses
@@ -47,20 +48,24 @@ Design specifications for the implementation of our UCL-style futbol tournament.
     * coach
     * homeStadium
     * name
+
 * **Methods**: 
     * createTeam()
     * destroyTeam()
-    * playMatch()
+    * addPlayer()
+    * removePlayer()
+    * getPlayerByNumber()
+    * getTeamRating()
     * updateRecord()
     * calculateGoalDifferential()
-    * calculatePoints()
-    * updateRoster()
- 
+    * printTeam()
+
 `League`
 
 * **Attributes**: teams, region, leagueTable
 * **Methods**: 
-    * generateSchedule()
+    * setSchedule()
+    * calculatePoints()
     * simulateMatchDay()
     * updateStandings()
 
