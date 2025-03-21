@@ -212,7 +212,100 @@ Player* determineScorer(Team* team)
 }
 
 // Determine which player assisted the goal (if applicable)
-Player* determineAssist(Team* team, Player* scorer);
+Player* determineAssist(Team* team, Player* scorer)
+{
+    // Validate input
+    if (team == NULL)
+    {
+        fprintf(stderr, "Error: Tried finding assister for a NULL team.\n");
+        return NULL;
+    } 
+    else if (team -> numPlayers <= 0)
+    {
+        fprintf(stderr, "Error: Tried finding assister for a team with %d players.\n", 
+        team -> numPlayers);
+        return NULL;
+    }
+
+    // 30% chance of no assist
+    if (randomProbability() < 0.3)
+    {
+        return NULL;
+    }
+
+    // Allocate memory for weighted probabilities
+    double* weights = (double*)malloc(sizeof(double) * team -> numPlayers);
+    double totalWeight = 0.0;
+
+    // Null check weights
+    if (weights == NULL)
+    {
+        fprintf(stderr, "Error: Failed allocating memory for weights array.\n");
+        return NULL;
+    }
+
+    // Assign assist weights
+    for (int i = 0; i < team -> numPlayers; i++)
+    {
+        Player* player = team -> players[i];
+
+        // Don't include the scorer of the goal
+        if (team -> players[i] == scorer)
+        {
+            weights[i] = 0.0;
+            continue;
+        }
+        
+        double weight = player -> rating;
+
+        // Adjust weights based on their positions
+        if (strcmp(player -> position, "fwd") == 0) { weight *= 1.25; }          // Forwards
+        else if (strcmp(player -> position, "mid") == 0) { weight *= 2.0; }    // Midfielders
+        else if (strcmp(player -> position, "def") == 0) { weight *= 0.75; }    // Defenders
+        else if (strcmp(player -> position, "gkp") == 0) { weight *= 0.01; }    // Goal Keepers
+
+        // Exclude injured players
+        if (player -> injuryStatus == true) { weight = 0.0; }
+
+        // Store weights and compute total
+        weights[i] = weight;
+        totalWeight += weight;        
+    }
+
+    // Select player based on weighted probability
+    if (totalWeight <= 0.0)
+    {
+        free(weights);
+        return NULL;
+    }
+    
+    double randomValue = randomProbability() * totalWeight;
+    double cumulativeWeight = 0.0;
+    for (int i = 0; i < team -> numPlayers; i++)
+    {
+        cumulativeWeight += weights[i];
+        if (randomValue <= cumulativeWeight)
+        {
+            free(weights);
+            return team -> players[i];
+        }
+    }
+    
+    // Fallback, if no player is selected just select whoever is not injured
+    free(weights);
+
+    for (int i = 0; i < team -> numPlayers; i++)
+    {
+        if (team -> players[i] -> injuryStatus == false)
+        {
+            return team -> players[i];
+        }
+    }
+
+    fprintf(stderr, "Error: Could not find a player on %s who could've assisted a goal.\n", 
+            team -> name);
+    return NULL;
+}
 
 // Simulate any potential injuries that would occur during a match
 void simulateInjuries(Match* match);
