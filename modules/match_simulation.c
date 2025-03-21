@@ -2,8 +2,10 @@
  * @author  Javier A. Rodillas
  * @details Class implementation of the match simulation module. 
  * 
- * @cite    implementation of randomInt from: 
+ * @cite    Implementation of randomInt from: 
  *          https://www.quora.com/How-do-I-get-a-random-number-from-1-to-100-in-the-C-language
+ * @cite    Base goal scoring probability from:
+ *          https://www.uefa.com/uefachampionsleague/statistics/
  */
 
 
@@ -90,7 +92,34 @@ void simulateMatch(Match* match)
 }
 
 // Calculate the probability of two teams scoring based on ratings
-double calculateScoringProbability(Team* team, Team* opponentTeam);
+double calculateScoringProbability(Team* team, Team* opponentTeam)
+{
+    // Null check both teams
+    if (team == NULL)
+    {
+        fprintf(stderr, "Error: Tried calculating scoring probabilities with NULL team.\n");
+        return 0.0;
+    } else if (opponentTeam == NULL)
+    {
+        fprintf(stderr, "Error: Tried calculating scoring probabilities with NULL opposing team.\n");
+        return 0.0;
+    }
+
+    // Set base scoring probability
+    double scoringProbability = 0.0357;
+
+    // Get team ratings
+    double teamRating = calculateTeamRating(team);
+    double opponentTeamRating = calculateTeamRating(opponentTeam);
+
+    // Calculate ratio between team ratings
+    double teamRatingRatio = teamRating / opponentTeamRating;
+
+    // Weight our new scoring probability
+    double weightedScoringProbability = scoringProbability * teamRatingRatio;
+
+    return weightedScoringProbability;
+}
 
 // Determine which player on the team scored the goal
 Player* determineScorer(Team* team);
