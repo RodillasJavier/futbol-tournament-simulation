@@ -1,8 +1,10 @@
 /**
- * @author Javier A. Rodillas
+ * @author  Javier A. Rodillas
  * @details Class implementation of the match simulation module. 
+ * 
+ * @cite    implementation of randomInt from: 
+ *          https://www.quora.com/How-do-I-get-a-random-number-from-1-to-100-in-the-C-language
  */
-
 
 
 /* INCLUDE STATEMENTS */
@@ -25,7 +27,6 @@ void initRandom()
         srand((unsigned int)time(NULL));
         randomInitialized = true;
     }
-    
 }
 
 // Generate a random number (double) between 0 and 1
@@ -46,10 +47,15 @@ int randomInt(int min, int max)
 
     // Generate a number between min and max (inclusive)
     return (rand() % (max - min + 1)) + min;
-
-    // implementation from: https://www.quora.com/How-do-I-get-a-random-number-from-1-to-100-in-the-C-language
 }
 
 
 
 /* FUNCTIONS */
+
+void simulateMatch(Match* match);
+double calculateScoringProbability(Team* team, Team* opponentTeam);
+Player* determineScorer(Team* team);
+Player* determineAssist(Team* team, Player* scorer);
+void simulateInjuries(Match* match);
+void simulateMatchMinutes(Match* match, int startMinute, int endMinute);
