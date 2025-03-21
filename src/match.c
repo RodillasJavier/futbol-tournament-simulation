@@ -217,6 +217,7 @@ void printMatchReport(Match* match)
     }    
 }
 
+// Update the records of the teams involved in the match
 void updateTeamRecords(Match* match)
 {
     // Null check match
@@ -264,7 +265,38 @@ void updateTeamRecords(Match* match)
     updatePoints(match -> awayTeam);
 }
 
-int getMatchWinner(Match* match);
+// Get match winner (0 => Home; 1 => Away; -1 => Draw)
+int getMatchWinner(Match* match)
+{
+    // Null check match
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Tried to get the winner from a match that doesn't exist.\n");
+        return -2;
+    }
+
+    // Make sure the match has been played
+    if (match -> isCompleted == false) {
+        fprintf(stderr, "Error: Cannot get winner because the match (%s vs %s) has not been played yet.\n", 
+                match->homeTeam->name, match->awayTeam->name);
+        return -2;
+    }
+
+    // Home team won => 0
+    if (match -> homeScore > match -> awayScore)
+    {
+        return 0;
+    }
+
+    // Away team won => 1
+    else if (match -> homeScore < match -> awayScore)
+    {
+        return 1;
+    }
+
+    // Neither team won => draw => -1
+    return -1;
+}
 
 
 
