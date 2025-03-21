@@ -10,6 +10,9 @@
 #include "team.h"
 #include <stdbool.h>
 
+/**
+ * Match @struct representing a game between two football teams
+ */
 typedef struct {
     // Teams
     Team* homeTeam;             // (0 => home)

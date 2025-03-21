@@ -11,7 +11,6 @@
 /**
  * Player @struct representing a football player
  */
-
 typedef struct
 {
     int number;         // Number on the back of their jersey
