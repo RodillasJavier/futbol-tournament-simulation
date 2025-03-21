@@ -6,7 +6,15 @@
  * @details Header file for the match simulation module. 
  */
 
+
+
+/* INCLUDE STATEMENTS */
+
 #include "match.h"
+
+
+
+/* FUNCTION PROTOTYPES */
 
 /**
  * Simulate a complete match between two teams
