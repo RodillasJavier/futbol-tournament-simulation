@@ -148,12 +148,36 @@ void recordGoal(Match* match, Player* scorer, int teamIndex, int minute)
     scoreGoal(scorer);
 }
 
+// Print the results of the match
 void printMatchResult(Match* match)
 {
     // Null check match
     if (match == NULL)
     {
-        fprintf(stderr, "Error: Tried to print match report for a match that doesn't exist.\n");
+        fprintf(stderr, "Error: Tried to print match result for a match that doesn't exist.\n");
+        return;
+    }
+    
+    // The match hasn't been played yet
+    if (match -> isCompleted == false) {
+        printf("%s vs %s: Match not yet played\n", 
+                match->homeTeam->name, match->awayTeam->name);
+    }
+
+    // The match HAS been played
+    else 
+    {
+        // Scoreboard
+        printScoreBoard(match);
+    }
+}
+
+void printMatchReport(Match* match)
+{
+    // Null check match
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Tried to print match result for a match that doesn't exist.\n");
         return;
     }
     
@@ -170,9 +194,7 @@ void printMatchResult(Match* match)
         printf("Match Report: %s\n", match->date);
 
         // Scoreboard
-        printf("%s %d - %d %s\n", 
-                match -> homeTeam -> name, match -> homeScore, 
-                match -> awayScore, match -> awayTeam -> name);
+        printScoreBoard(match);
 
         // Goal information (if any)
         if (match -> numScorers > 0)
@@ -191,11 +213,25 @@ void printMatchResult(Match* match)
 
         // printf("\nMatch Statistics:\n");
         // Add more statistics here in the future?
-    }
+    }    
 }
-
-void printMatchReport(Match* match);
 
 void updateTeamRecords(Match* Match);
 
 int getMatchWinner(Match* match);
+
+/* HELPER FUNCTIONS */
+void printScoreBoard(Match* match)
+{
+    // Null check match
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Tried to print the scoreboard for a match that doesn't exist.\n");
+        return;
+    }
+
+    // Scoreboard
+    printf("%s %d - %d %s\n", 
+        match -> homeTeam -> name, match -> homeScore, 
+        match -> awayScore, match -> awayTeam -> name);
+}
