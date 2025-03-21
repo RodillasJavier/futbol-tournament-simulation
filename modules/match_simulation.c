@@ -195,9 +195,20 @@ Player* determineScorer(Team* team)
         }   
     }
 
-    // Default, if no player is selected
+    // Fallback, if no player is selected just select whoever is not injured
     free(weights);
-    return team -> players[0];
+
+    for (int i = 0; i < team -> numPlayers; i++)
+    {
+        if (team -> players[i] -> injuryStatus == false)
+        {
+            return team -> players[i];
+        }
+    }
+
+    fprintf(stderr, "Error: Could not find a player on %s who could've scored a goal.\n", 
+            team -> name);
+    return NULL;
 }
 
 // Determine which player assisted the goal (if applicable)
