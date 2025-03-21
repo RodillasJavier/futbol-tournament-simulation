@@ -148,7 +148,51 @@ void recordGoal(Match* match, Player* scorer, int teamIndex, int minute)
     scoreGoal(scorer);
 }
 
-void printMatchResult(Match* match);
+void printMatchResult(Match* match)
+{
+    // Null check match
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Tried to print match report for a match that doesn't exist.\n");
+        return;
+    }
+    
+    // The match hasn't been played yet
+    if (match -> isCompleted == false) {
+        printf("%s vs %s: Match not yet played\n", 
+                match->homeTeam->name, match->awayTeam->name);
+    }
+
+    // The match HAS been played
+    else 
+    {
+        // Header
+        printf("Match Report: %s\n", match->date);
+
+        // Scoreboard
+        printf("%s %d - %d %s\n", 
+                match -> homeTeam -> name, match -> homeScore, 
+                match -> awayScore, match -> awayTeam -> name);
+
+        // Goal information (if any)
+        if (match -> numScorers > 0)
+        {
+            printf("\nGoal Scorers:\n");
+
+            // Print each goal's information
+            for (int i = 0; i < match -> numScorers; i++) {
+                printf("%d' - %s (%s)\n", 
+                        match -> scoringMinutes[i],
+                        match -> scorers[i] -> name,
+                        // If scoring team was home then => print home team name : else print away team name
+                        match -> scorerTeamIndices[i] == 0 ? match -> homeTeam -> name : match -> awayTeam -> name);
+            }
+        }
+
+        // printf("\nMatch Statistics:\n");
+        // Add more statistics here in the future?
+    }
+}
 
 void printMatchReport(Match* match);
 
