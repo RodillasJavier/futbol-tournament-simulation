@@ -14,6 +14,7 @@
  */
 typedef struct
 {
+    //  Club details
     char name[50];          // Name of the club
     char city[50];          // City the club is based in
     char coach[50];         // Name of the head coach
@@ -24,11 +25,13 @@ typedef struct
     int numPlayers;         // Number of players currently on the team
     int maxPlayers;         // Maximum number of players a team can have
 
-    float rating;           // Overall rating (average) of the team
-
     // Schedule
+    // @attention: NO METHOD IN THIS CLASS TO CHANGE THIS
     int* schedule;          // Array of indices (of teams) in the order they play
     int scheduleLength;     // Length of schedule (alternatively, number of games)
+
+    // Rating
+    float rating;           // Overall rating (average) of the team
 
     // Record
     int wins;               // Games won
@@ -40,6 +43,7 @@ typedef struct
     int goalsConceded;      // Total allowed by opposing teams
     int goalDifferential;   // Result of (goalsScored - goalsConceded)
 
+    // Points
     int points;             // Points (3 for win, 1 for draw)
 } Team;
 
@@ -103,9 +107,15 @@ bool removePlayerByName(Team* team, char* name);
  */
 Player* getPlayerByNumber(const Team* team, int number);
 
+/**
+ * Calculate the teams overall rating (based on team average)
+ * 
+ * @param Team that we are calculating the rating of
+ */
+float calculateTeamRating(Team* team);
 
 /**
- * Update the record & points of a team
+ * Update the record of a team
  * 
  * @param Team that we want to update the record of
  * @param bool win
@@ -115,20 +125,20 @@ Player* getPlayerByNumber(const Team* team, int number);
 void updateRecord(Team* team, bool win, bool loss, bool draw);
 
 /**
- * Calculate the goal differential based on the number of goals scored & conceded
+ * Update the goal differential, goals scored & goals conceded
  * 
  * @param Team that we are calculating the differential of
  * @param int goalsScored
  * @param int goalsConceded
  */
-void calculateGoalDifferential(Team* team, int goalsScored, int goalsConceded);
+void updateGoals(Team* team, int goalsScored, int goalsConceded);
 
 /**
- * Calculate the teams overall rating (based on team average)
+ * Update the points of a team
  * 
- * @param Team that we are calculating the rating of
+ * @param Team that we want to update the points of
  */
-float calculateTeamRating(Team* team);
+void updatePoints(Team* team);
 
 /**
  * Print the information of a Team
