@@ -114,10 +114,10 @@ void recordGoal(Match* match, Player* scorer, int teamIndex, int minute)
         return;
     }
     
-    // Verify 0 <= minute <= 90
-    if (minute < 0 || minute > 90)
+    // Verify 0 <= minute
+    if (minute < 0)
     {
-        fprintf(stderr, "Error: Invalid scoring minute of %d, must be during the game (minute 0 - 90).\n", 
+        fprintf(stderr, "Error: Invalid scoring minute of %d, must be non-negative.\n", 
                 minute);
         return;
     }
