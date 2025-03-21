@@ -6,7 +6,10 @@
  *          https://www.quora.com/How-do-I-get-a-random-number-from-1-to-100-in-the-C-language
  * @cite    Base goal scoring probability from:
  *          https://www.uefa.com/uefachampionsleague/statistics/
+ * @cite    Weighted probability selection:
+ *          https://www.reddit.com/r/C_Programming/comments/pljqdc/how_do_i_do_a_weighted_random_generator/
  */
+
 
 
 /* INCLUDE STATEMENTS */
@@ -16,6 +19,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <string.h>
 
 
 
@@ -122,7 +126,79 @@ double calculateScoringProbability(Team* team, Team* opponentTeam)
 }
 
 // Determine which player on the team scored the goal
-Player* determineScorer(Team* team);
+Player* determineScorer(Team* team)
+{
+    // Validate input
+    if (team == NULL)
+    {
+        fprintf(stderr, "Error: Tried finding scorer for a NULL team.\n");
+        return NULL;
+    } 
+    else if (team -> numPlayers <= 0)
+    {
+        fprintf(stderr, "Error: Tried finding scorer for a team with %d players.\n", 
+        team -> numPlayers);
+        return NULL;
+    }
+
+    // Allocate memory for weights
+    double* weights = (double*)malloc(sizeof(double) * team -> numPlayers);
+    double totalWeight = 0.0;
+
+    // Null check weights
+    if (weights == NULL)
+    {
+        fprintf(stderr, "Error: Failed allocating memory for weights array.\n");
+        return NULL;
+    }
+
+    // Assign weights based on player attributes
+    for (int i = 0; i < team -> numPlayers; i++)
+    {
+        // Pick a player off of the roster and assign their initial weight
+        Player* player = team -> players[i];
+        double weight = player -> rating;
+
+        // Adjust weights based on their positions
+        if (strcmp(player -> position, "fwd") == 0) { weight *= 2.0; }          // Forwards
+        else if (strcmp(player -> position, "mid") == 0) { weight *= 1.25; }    // Midfielders
+        else if (strcmp(player -> position, "def") == 0) { weight *= 0.75; }    // Defenders
+        else if (strcmp(player -> position, "gkp") == 0) { weight *= 0.01; }    // Goal Keepers
+
+        // Exclude injured players
+        if (player -> injuryStatus == true) { weight = 0.0; }
+
+        // Store weights and compute total
+        weights[i] = weight;
+        totalWeight += weight;
+    }
+
+    // If no eligible scorers (all injured)
+    if (totalWeight <= 0.0)
+    {
+        free(weights);
+        return NULL;
+    }
+
+    // Select player based on weighted probability
+    double randomValue = randomProbability() * totalWeight;
+    double cumulativeWeight = 0.0;
+
+    for (int i = 0; i < team -> numPlayers; i++)
+    {
+        cumulativeWeight += weights[i];
+        if (randomValue <= cumulativeWeight)
+        {
+            Player* scorer = team -> players[i];
+            free(weights);
+            return scorer;
+        }   
+    }
+
+    // Default, if no player is selected
+    free(weights);
+    return team -> players[0];
+}
 
 // Determine which player assisted the goal (if applicable)
 Player* determineAssist(Team* team, Player* scorer);

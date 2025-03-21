@@ -31,12 +31,10 @@
 * **Attributes**: 
     * number
     * position
-        * goal keeper - **gk**
-        * center back - **cb**
-        * full backs - **rb, lb, rwb, lwb**
-        * center midfield - **cm, cdm, cam**
-        * winger - **rm, lm, w, lw**
-        * forward - **st, cf**
+        * goal keeper - **gkp**
+        * defender - **def**
+        * midfielder - **mid**
+        * forward - **fwd**
     * name
     * rating
     * goals
