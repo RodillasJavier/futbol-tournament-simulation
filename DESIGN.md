@@ -94,11 +94,12 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 * **Attributes**: 
     * homeTeam
     * awayTeam
-    * score
+    * homeScore
+    * awayScore
+    * numScorers
     * scorers
     * scorerTeamIndices
     * scoringMinutes
-    * numScorers
     * date
     * isCompleted
 
