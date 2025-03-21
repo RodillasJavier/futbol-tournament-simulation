@@ -6,8 +6,16 @@
  * @details Header file for the team class file
  */
 
+
+
+/* INCLUDE STATEMENTS */
+
 #include "player.h"
 #include <stdbool.h>
+
+
+
+/* FUNCTION PROTOTYPES */
 
 /**
  * Team @struct to represent a club football team

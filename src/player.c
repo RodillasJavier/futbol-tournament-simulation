@@ -15,7 +15,7 @@
 
 
 
-/* METHODS */
+/* FUNCTIONS */
 
 // Create a new player with all of their attributes
 Player* createPlayer(int number, const char* position, const char* name, int rating)

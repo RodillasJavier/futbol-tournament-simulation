@@ -6,7 +6,15 @@
  * @details Header file for the Player class file
  */
 
+
+
+/* INCLUDE STATEMENTS */
+
 #include <stdbool.h>
+
+
+
+/* FUNCTION PROTOTYPES */
 
 /**
  * Player @struct representing a football player

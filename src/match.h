@@ -6,9 +6,17 @@
  * @details Header file for the Player class file
  */
 
+
+
+/* INCLUDE STATEMENTS */
+
 #include "player.h"
 #include "team.h"
 #include <stdbool.h>
+
+
+
+/* FUNCTION PROTOTYPES */
 
 /**
  * Match @struct representing a game between two football teams

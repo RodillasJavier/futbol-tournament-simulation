@@ -15,7 +15,7 @@
 
 
 
-/* METHODS */
+/* FUNCTIONS */
 
 // Create a new team
 Team* createTeam(const char* name, const char* city, const char* coach, const char* homeStadium)

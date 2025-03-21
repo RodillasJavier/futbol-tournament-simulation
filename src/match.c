@@ -15,7 +15,7 @@
 
 
 
-/* METHODS */
+/* FUNCTIONS */
 
 // Constructor for the Match class
 Match* createMatch(Team* homeTeam, Team* awayTeam, const char* date)
