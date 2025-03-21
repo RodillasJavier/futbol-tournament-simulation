@@ -334,20 +334,6 @@ void updateRecord(Team* team, bool win, bool loss, bool draw)
     else if (draw) { team -> draws++; }
 }
 
-// Update the points of a team
-void updatePoints(Team* team)
-{
-    // Null check team
-    if (team == NULL)
-    {
-        fprintf(stderr, "Error: Tried updating the record of a team that doesn't exist.\n");
-        return;
-    }
-
-    // 3 points for a win; 1 point for a draw; no points awarded for a loss
-    team -> points = (team -> wins * 3) + (team -> draws);
-}
-
 // Update the goal differential, goals scored & goals conceded
 void updateGoals(Team* team, int goalsScored, int goalsConceded)
 {
@@ -373,6 +359,20 @@ void updateGoals(Team* team, int goalsScored, int goalsConceded)
 
     // Calculate goal differential
     team -> goalDifferential = team -> goalsScored - team -> goalsConceded;
+}
+
+// Update the points of a team
+void updatePoints(Team* team)
+{
+    // Null check team
+    if (team == NULL)
+    {
+        fprintf(stderr, "Error: Tried updating the record of a team that doesn't exist.\n");
+        return;
+    }
+
+    // 3 points for a win; 1 point for a draw; no points awarded for a loss
+    team -> points = (team -> wins * 3) + (team -> draws);
 }
 
 // Print the information of a Team

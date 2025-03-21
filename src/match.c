@@ -226,15 +226,42 @@ void updateTeamRecords(Match* match)
         return;
     }
 
-    // Update home team
-        // Update record
-        // Update points
-        // Update goals
+    // Make sure the match has been played
+    if (match -> isCompleted == false) {
+        fprintf(stderr, "Error: Cannot update team records because the match (%s vs %s) has not been played yet.\n", 
+                match->homeTeam->name, match->awayTeam->name);
+        return;
+    }
 
-    // Update away team
-        // Update record
-        // Update points
-        // Update goals
+    // Get the winner of the match
+    int matchWinner = getMatchWinner(match);
+
+    // Home team won
+    if (matchWinner == 0)
+    {
+        updateRecord(match -> homeTeam, true, false, false);
+        updateRecord(match -> awayTeam, false, true, false);
+    }
+
+    // Away team won
+    else if (matchWinner == 1)
+    {
+        updateRecord(match -> homeTeam, false, true, false);
+        updateRecord(match -> awayTeam, true, false, false);
+    }
+
+    // Draw
+    else if (matchWinner == -1)
+    {
+        updateRecord(match -> homeTeam, false, false, true);
+        updateRecord(match -> awayTeam, false, false, true);
+    }
+    
+    updateGoals(match -> homeTeam, match -> homeScore, match -> awayScore);
+    updateGoals(match -> awayTeam, match -> awayScore, match -> homeScore);
+
+    updatePoints(match -> homeTeam);
+    updatePoints(match -> awayTeam);
 }
 
 int getMatchWinner(Match* match);

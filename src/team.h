@@ -125,13 +125,6 @@ float calculateTeamRating(Team* team);
 void updateRecord(Team* team, bool win, bool loss, bool draw);
 
 /**
- * Update the points of a team
- * 
- * @param Team that we want to update the points of
- */
-void updatePoints(Team* team);
-
-/**
  * Update the goal differential, goals scored & goals conceded
  * 
  * @param Team that we are calculating the differential of
@@ -139,6 +132,13 @@ void updatePoints(Team* team);
  * @param int goalsConceded
  */
 void updateGoals(Team* team, int goalsScored, int goalsConceded);
+
+/**
+ * Update the points of a team
+ * 
+ * @param Team that we want to update the points of
+ */
+void updatePoints(Team* team);
 
 /**
  * Print the information of a Team
