@@ -6,8 +6,10 @@
 ## File Structure (containing all implemented files so far)
 ```
 .
-├── DESIGN.md
 ├── README.md
+├── modules
+│   ├── match_simulation.c
+│   └── match_simulation.h
 ├── src
 │   ├── match.c
 │   ├── match.h
@@ -24,7 +26,7 @@
 
 ## Class Breakdown
 
-### Player
+### Player class
 
 * **Attributes**: 
     * number
@@ -51,7 +53,7 @@
     * copyPlayer()
 
 
-### Team
+### Team class
 
 * **Attributes**: 
     * players/team roster
@@ -80,7 +82,7 @@
     * printTeam()
 
 
-### League
+### League class
 
 * **Attributes**: teams, region, leagueTable
 * **Methods**: 
@@ -90,7 +92,7 @@
     * updateStandings()
 
 
-### Match
+### Match class
 
 * **Attributes**: 
     * homeTeam
@@ -114,7 +116,7 @@
     * getMatchWinner()
 
 
-### Tournament
+### Tournament class
 
 * **Attributes**: teams, bracket, rounds
 * **Methods**: 
@@ -133,7 +135,7 @@ Logic for simulating match outcomes. *Idea*: Weighted probabilities based on pla
 * **Methods**: 
     * simulateMatch()
     * calculateScoringProbability()
-    * determingScorer()
+    * determineScorer()
     * determineAssist()
     * simulateInjuries()
     * simulateMatchMinutes()
