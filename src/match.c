@@ -301,6 +301,8 @@ int getMatchWinner(Match* match)
 
 
 /* HELPER FUNCTIONS */
+
+// Pretty print out the scoreboard
 void printScoreBoard(Match* match)
 {
     // Null check match
