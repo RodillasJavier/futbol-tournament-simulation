@@ -278,68 +278,6 @@ Player* getPlayerByNumber(const Team* team, int number)
     return NULL;
 }
 
-// Update the record & points of a team
-void updateRecord(Team* team, bool win, bool loss, bool draw)
-{
-    // Null check team
-    if (team == NULL)
-    {
-        fprintf(stderr, "Error: Tried updating the record of a team that doesn't exist.\n");
-        return;
-    }
-    
-    // Verify that only 1 out of 3 of the booleans are true
-    int boolean_count = 0;
-    if (win == true) { boolean_count++; }
-    if (loss == true) { boolean_count++; }
-    if (draw == true) { boolean_count++; }
-    // Either no result recorded or multiple results recorded for one game
-    if (boolean_count > 1 || boolean_count == 0)
-    {
-        fprintf(stderr, "Error: Team recorded more than one outcome for a game (i.e. w + l, w + d, d + l).\n");
-        return;
-    }
-
-    // Increment the count + points of whichever boolean is true
-    if (win) {
-        team -> wins++;
-        team -> points += 3;    // 3 points for a win
-    } else if (loss) {
-        team -> losses++; 
-        // No points awarded for a loss
-    } else if (draw) {
-        team -> draws++;
-        team -> points += 1;    // 1 point for a draw
-    }
-}
-
-// Calculate the goal differential based on the number of goals scored & conceded
-void calculateGoalDifferential(Team* team, int goalsScored, int goalsConceded)
-{
-    // Null check team
-    if (team == NULL)
-    {
-        fprintf(stderr, "Error: Tried to calculate goal differential for a team that doesn't exist.\n");
-        return;
-    }
-
-    // Make sure goalsScored & goalsConceded are both non-negative
-    if (goalsScored < 0) {
-        fprintf(stderr, "Error: Tried to calculate goal differential with NEGATIVE goals scored.\n");
-        return;
-    } else if (goalsConceded < 0) {
-        fprintf(stderr, "Error: Tried to calculate goal differential with NEGATIVE goals conceded.\n");
-        return;
-    }
-
-    // Update goals scored & goals conceded by the team
-    team -> goalsScored += goalsScored;
-    team -> goalsConceded += goalsConceded;
-
-    // Calculate goal differential
-    team -> goalDifferential = team -> goalsScored - team -> goalsConceded;
-}
-
 // Calculate the teams overall rating (based on team average)
 float calculateTeamRating(Team* team)
 {
@@ -366,6 +304,75 @@ float calculateTeamRating(Team* team)
 
     // Divide by the total number of players
     return (float)total_ratings / team -> numPlayers;
+}
+
+// Update the record & points of a team
+void updateRecord(Team* team, bool win, bool loss, bool draw)
+{
+    // Null check team
+    if (team == NULL)
+    {
+        fprintf(stderr, "Error: Tried updating the record of a team that doesn't exist.\n");
+        return;
+    }
+    
+    // Verify that only 1 out of 3 of the booleans are true
+    int boolean_count = 0;
+    if (win == true) { boolean_count++; }
+    if (loss == true) { boolean_count++; }
+    if (draw == true) { boolean_count++; }
+    // Either no result recorded or multiple results recorded for one game
+    if (boolean_count > 1 || boolean_count == 0)
+    {
+        fprintf(stderr, "Error: Team either recorded MULTIPLE outcomes for a game (i.e. w + l, w + d, d + l), or NO outcome for a game.\n");
+        return;
+    }
+
+    // Increment the count of whichever boolean is true
+    if (win) { team -> wins++; }
+    else if (loss) { team -> losses++; }
+    else if (draw) { team -> draws++; }
+}
+
+// Update the points of a team
+void updatePoints(Team* team)
+{
+    // Null check team
+    if (team == NULL)
+    {
+        fprintf(stderr, "Error: Tried updating the record of a team that doesn't exist.\n");
+        return;
+    }
+
+    // 3 points for a win; 1 point for a draw; no points awarded for a loss
+    team -> points = (team -> wins * 3) + (team -> draws);
+}
+
+// Update the goal differential, goals scored & goals conceded
+void updateGoals(Team* team, int goalsScored, int goalsConceded)
+{
+    // Null check team
+    if (team == NULL)
+    {
+        fprintf(stderr, "Error: Tried to calculate goal differential for a team that doesn't exist.\n");
+        return;
+    }
+
+    // Make sure goalsScored & goalsConceded are both non-negative
+    if (goalsScored < 0) {
+        fprintf(stderr, "Error: Tried to calculate goal differential with NEGATIVE goals scored.\n");
+        return;
+    } else if (goalsConceded < 0) {
+        fprintf(stderr, "Error: Tried to calculate goal differential with NEGATIVE goals conceded.\n");
+        return;
+    }
+
+    // Update goals scored & goals conceded by the team
+    team -> goalsScored += goalsScored;
+    team -> goalsConceded += goalsConceded;
+
+    // Calculate goal differential
+    team -> goalDifferential = team -> goalsScored - team -> goalsConceded;
 }
 
 // Print the information of a Team

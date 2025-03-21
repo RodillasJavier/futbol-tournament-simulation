@@ -172,6 +172,7 @@ void printMatchResult(Match* match)
     }
 }
 
+// Print a detailed match report with all of the minutes & scorers
 void printMatchReport(Match* match)
 {
     // Null check match
@@ -216,9 +217,29 @@ void printMatchReport(Match* match)
     }    
 }
 
-void updateTeamRecords(Match* Match);
+void updateTeamRecords(Match* match)
+{
+    // Null check match
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Tried to update team records with results from a match that doesn't exist.\n");
+        return;
+    }
+
+    // Update home team
+        // Update record
+        // Update points
+        // Update goals
+
+    // Update away team
+        // Update record
+        // Update points
+        // Update goals
+}
 
 int getMatchWinner(Match* match);
+
+
 
 /* HELPER FUNCTIONS */
 void printScoreBoard(Match* match)

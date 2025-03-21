@@ -57,19 +57,19 @@ int main()
     // Test update record
     printf("\nUpdating team record (win)...\n");
     updateRecord(barca, true, false, false);
-    calculateGoalDifferential(barca, 3, 1);
+    updateGoals(barca, 3, 1);
     printf("Team record after win: %d-%d-%d (W-L-D), Points: %d\n", 
         barca->wins, barca->losses, barca->draws, barca->points);
     
     printf("\nUpdating team record (draw)...\n");
     updateRecord(barca, false, false, true);
-    calculateGoalDifferential(barca, 2, 2);
+    updateGoals(barca, 2, 2);
     printf("Team record after draw: %d-%d-%d (W-L-D), Points: %d\n", 
         barca->wins, barca->losses, barca->draws, barca->points);
     
     printf("\nUpdating team record (loss)...\n");
     updateRecord(barca, false, true, false);
-    calculateGoalDifferential(barca, 0, 1);
+    updateGoals(barca, 0, 1);
     printf("Team record after loss: %d-%d-%d (W-L-D), Points: %d\n", 
         barca->wins, barca->losses, barca->draws, barca->points);
 

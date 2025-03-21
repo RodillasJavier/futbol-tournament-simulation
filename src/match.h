@@ -75,7 +75,7 @@ void printMatchReport(Match* match);
  * 
  * @param Match that we are interested in
  */
-void updateTeamRecords(Match* Match);
+void updateTeamRecords(Match* match);
 
 /**
  * Get match winner

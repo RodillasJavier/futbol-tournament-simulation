@@ -4,6 +4,7 @@
         "__node_handle": "c",
         "stdbool.h": "c",
         "stdlib.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "string.h": "c"
     }
 }
