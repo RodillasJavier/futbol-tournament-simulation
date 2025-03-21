@@ -69,9 +69,89 @@ Match* createMatch(Team* homeTeam, Team* awayTeam, const char* date)
     return match;
 }
 
-void destroyMatch(Match* match);
-void recordGoal(Match* match, Player* scorer, int teamIndex, int minute);
+// Destructor for the Match class
+void destroyMatch(Match* match)
+{
+    // Null check match
+    if (match != NULL)
+    {
+        // Free scorers list if it exists
+        if (match -> scorers != NULL) { free(match -> scorers); }
+
+        // Free scorerTeamIndices if it exists
+        if (match -> scorerTeamIndices != NULL) { free(match -> scorerTeamIndices); }
+        
+        // Free scoringMinutes if it exists
+        if (match -> scoringMinutes != NULL) { free(match -> scoringMinutes); }
+        
+        // Free the team
+        free(match);
+    }
+}
+
+// Record a goal scored in the match (0 => home; 1 => away)
+void recordGoal(Match* match, Player* scorer, int teamIndex, int minute)
+{
+    // Null check match
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Tried to record a goal for a match that doesn't exist.\n");
+        return;
+    }    
+
+    // Null check scorer
+    if (scorer == NULL)
+    {
+        fprintf(stderr, "Error: Tried to record a goal by a player that doesn't exist.\n");
+        return;
+    }
+
+    // Make sure the team index is either 0 (home) or 1 (away)
+    if (teamIndex != 0 && teamIndex != 1)
+    {
+        fprintf(stderr, "Error: Invalid team index of %d, must be either 0 (home) or 1 (away).\n", 
+                teamIndex);
+        return;
+    }
+    
+    // Verify 0 <= minute <= 90
+    if (minute < 0 || minute > 90)
+    {
+        fprintf(stderr, "Error: Invalid scoring minute of %d, must be during the game (minute 0 - 90).\n", 
+                minute);
+        return;
+    }
+    
+    // Number of scorers
+    match -> numScorers++;
+
+    // Resizing the arrays of scorers, team indices and minutes that we created
+    match -> scorers = (Player**)realloc(match -> scorers, 
+                                        match -> numScorers * sizeof(Player*));
+    match -> scorerTeamIndices = (int*)realloc(match -> scorerTeamIndices, 
+                                                match -> numScorers * sizeof(int));
+    match -> scoringMinutes = (int*)realloc(match -> scoringMinutes, 
+                                            match -> numScorers * sizeof(int));
+
+    // Update scorers, team indices, and minutes with most goal details
+    match -> scorers[match -> numScorers - 1] = scorer;
+    match -> scorerTeamIndices[match -> numScorers - 1] = teamIndex;
+    match -> scoringMinutes[match -> numScorers - 1] = minute;
+
+    // Home team scored
+    if (teamIndex == 0) { match -> homeScore++; }
+
+    // Away team scored => (teamIndex == 1)
+    else { match -> awayScore++; }
+
+    // Update players stats
+    scoreGoal(scorer);
+}
+
 void printMatchResult(Match* match);
+
 void printMatchReport(Match* match);
+
 void updateTeamRecords(Match* Match);
+
 int getMatchWinner(Match* match);
