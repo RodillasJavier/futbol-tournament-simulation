@@ -129,9 +129,15 @@ Design specifications for the implementation of our UCL-style futbol tournament.
 
 ### Match Simulation Module: 
 
-Logic for simulating match outcomes. Idea: Weighted probabilities based on player ratings.
+Logic for simulating match outcomes. *Idea*: Weighted probabilities based on player ratings.
 
-
+* **Methods**: 
+    * simulateMatch()
+    * calculateScoringProbability()
+    * determingScorer()
+    * determineAssist()
+    * simulateInjuries()
+    * simulateMatchMinutes()
 
 ### Tournament Simulation Module: 
 
