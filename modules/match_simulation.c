@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <time.h>
+#include <stdio.h>
 
 
 
@@ -53,9 +54,52 @@ int randomInt(int min, int max)
 
 /* FUNCTIONS */
 
-void simulateMatch(Match* match);
+// Simulate a complete match between two teams
+void simulateMatch(Match* match)
+{
+    // Null check match 
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Tried to simulate a match that doesn't exist.\n");
+        return;
+    }
+    
+    // Make sure that the match hasn't been simulated already
+    if (match -> isCompleted)
+    {
+        fprintf(stderr, "Error: Tried to simulate a match that has already been played.\n");
+        return;
+    }
+
+    // 1st half
+    int stoppageTimeFirstHalf = randomInt(0, 10);
+    simulateMatchMinutes(match, 0, 45 + stoppageTimeFirstHalf);
+
+    // 2nd half
+    int stoppageTimeSecondHalf = randomInt(0, 10);
+    simulateMatchMinutes(match, 45, 90 + stoppageTimeSecondHalf);
+
+    // Any injuries that may have occurred during the match
+    simulateInjuries(match);
+
+    // Update game status
+    match -> isCompleted = true;
+
+    // Update team records
+    updateTeamRecords(match);
+}
+
+// Calculate the probability of two teams scoring based on ratings
 double calculateScoringProbability(Team* team, Team* opponentTeam);
+
+// Determine which player on the team scored the goal
 Player* determineScorer(Team* team);
+
+// Determine which player assisted the goal (if applicable)
 Player* determineAssist(Team* team, Player* scorer);
+
+// Simulate any potential injuries that would occur during a match
 void simulateInjuries(Match* match);
+
+// Simulate the minutes of a match, from start -> end
 void simulateMatchMinutes(Match* match, int startMinute, int endMinute);

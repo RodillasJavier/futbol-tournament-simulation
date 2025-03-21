@@ -82,7 +82,7 @@ void printMatchResult(Match* match);
 void printMatchReport(Match* match);
 
 /**
- * Update the records of the teams involved in the match
+ * Update the records/tables of the teams involved in the match
  * 
  * @param Match that we are interested in
  */
