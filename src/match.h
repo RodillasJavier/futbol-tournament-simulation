@@ -51,7 +51,7 @@ void destroyMatch(Match* match);
  * 
  * @param match that we are recording a scored goal in
  * @param scorer that made the goal
- * @param teamIndex to indicate if it was a home or away team goal
+ * @param teamIndex to indicate if it was a home or away team goal (0 => home; 1 => away)
  * @param minute that the goal was scored in
  */
 void recordGoal(Match* match, Player* scorer, int teamIndex, int minute);
