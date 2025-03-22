@@ -250,7 +250,7 @@ Player* determineAssist(Team* team, Player* scorer)
         Player* player = team -> players[i];
 
         // Don't include the scorer of the goal
-        if (team -> players[i] == scorer)
+        if (player == scorer)
         {
             weights[i] = 0.0;
             continue;
@@ -308,7 +308,49 @@ Player* determineAssist(Team* team, Player* scorer)
 }
 
 // Simulate any potential injuries that would occur during a match
-void simulateInjuries(Match* match);
+void simulateInjuries(Match* match)
+{
+    // Verify input
+    if (match == NULL || match -> homeTeam == NULL || match -> awayTeam == NULL)
+    {
+        fprintf(stderr, "Error: Match or one of it's participating teams were NULL.\n");
+        return;
+    }
+
+    // Get home and away teams
+    Team* homeTeam = match -> homeTeam;
+    Team* awayTeam = match -> awayTeam;
+
+    // Home team injuries
+    for (int i = 0; i < homeTeam -> numPlayers; i++)
+    {
+        // Get player from the home team
+        Player* player = homeTeam -> players[i];
+
+        // 2.5% chance of injury per match
+        if (randomProbability() < 0.025 && player -> injuryStatus == false)
+        {
+            updateInjuryStatus(player, true);
+            printf("INJURY: %s (%s) was injured during the match!\n", 
+                    player -> name, homeTeam -> name);
+        }
+    }
+
+    // Away team injuries
+    for (int i = 0; i < awayTeam -> numPlayers; i++)
+    {
+        // Get player from the away team
+        Player* player = awayTeam -> players[i];
+
+        // 2.5% chance of injury per match
+        if (randomProbability() < 0.025 && player -> injuryStatus == false)
+        {
+            updateInjuryStatus(player, true);
+            printf("INJURY: %s (%s) was injured during the match!\n", 
+                    player -> name, awayTeam -> name);
+        }
+    }
+}
 
 // Simulate the minutes of a match, from start -> end
 void simulateMatchMinutes(Match* match, int startMinute, int endMinute);
