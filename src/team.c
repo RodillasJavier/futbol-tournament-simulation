@@ -103,7 +103,7 @@ void destroyTeam(Team* team)
 }
 
 // Add a player to a team
-bool addPlayer(Team* team, const Player* player)
+bool addPlayer(Team* team, Player* player)
 {
     // Null check if the team exists
     if (team == NULL)
@@ -137,18 +137,9 @@ bool addPlayer(Team* team, const Player* player)
             return false;
         }
     }
-    
-    // Create a copy of the player to add to the team
-    Player* newPlayer = createPlayer(0, "", "", 1);
-    if (newPlayer == NULL)
-    {
-        fprintf(stderr, "Error: failed to allocate memory for a player.\n");
-        return false;
-    }
-    copyPlayer(player, newPlayer);
 
     // Add player to roster and increment roster size
-    team -> players[team -> numPlayers] = newPlayer;
+    team -> players[team -> numPlayers] = player;
     team -> numPlayers++;
 
     // Calculate new team rating
@@ -407,14 +398,15 @@ void printTeam(const Team* team, bool showPlayers)
     
     // Roster
     printf("Players: %d/%d\n", 
-            team->numPlayers, team->maxPlayers);
+            team -> numPlayers, team -> maxPlayers);
     
     // OPTIONAL: Print the roster
-    if (showPlayers && team->numPlayers > 0) {
+    if (showPlayers && team -> numPlayers > 0) {
         printf("\nRoster:\n");
-        for (int i = 0; i < team->numPlayers; i++) {
+        for (int i = 0; i < team -> numPlayers; i++) {
             printf("Player %d: ", i + 1);
-            printPlayer(team->players[i]);
+            printPlayer(team -> players[i]);
+            printf("goals: %d\n", team -> players[i] -> goals);
         }
     }
     

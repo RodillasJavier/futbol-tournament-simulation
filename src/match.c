@@ -237,34 +237,25 @@ void updateTeamRecords(Match* match)
         return;
     }
 
-    // Get the winner of the match
+    // Get the winner of the match & update their record
     int matchWinner = getMatchWinner(match);
-
-    // Home team won
-    if (matchWinner == 0)
-    {
+    if (matchWinner == HOME_TEAM) {
         updateRecord(match -> homeTeam, true, false, false);
         updateRecord(match -> awayTeam, false, true, false);
-    }
-
-    // Away team won
-    else if (matchWinner == 1)
-    {
+    } else if (matchWinner == AWAY_TEAM) {
         updateRecord(match -> homeTeam, false, true, false);
         updateRecord(match -> awayTeam, true, false, false);
-    }
-
-    // Draw
-    else if (matchWinner == -1)
-    {
+    } else if (matchWinner == DRAW) {
         updateRecord(match -> homeTeam, false, false, true);
         updateRecord(match -> awayTeam, false, false, true);
     }
     
+    // Update goals and points for home team
     updateGoals(match -> homeTeam, match -> homeScore, match -> awayScore);
-    updateGoals(match -> awayTeam, match -> awayScore, match -> homeScore);
-
     updatePoints(match -> homeTeam);
+
+    // Update goals and points for away team
+    updateGoals(match -> awayTeam, match -> awayScore, match -> homeScore);
     updatePoints(match -> awayTeam);
 }
 

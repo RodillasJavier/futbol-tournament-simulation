@@ -82,7 +82,7 @@ void destroyTeam(Team* team);
  * 
  * @return bool (true => added to team, false otherwise)
  */
-bool addPlayer(Team* team, const Player* player);
+bool addPlayer(Team* team, Player* player);
 
 /**
  * Remove a specific player from a team, searching for them by number

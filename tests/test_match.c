@@ -13,6 +13,10 @@ int main() {
     Player* player1 = createPlayer(9, "fwd", "Lamine Yamal", 81);
     Player* player2 = createPlayer(10, "mid", "Jude Bellingham", 90);
 
+    // Add them to the roster
+    addPlayer(homeTeam, player1);
+    addPlayer(awayTeam, player2);
+
     /* TESTING MATCH CREATION */
 
     // Create a match
@@ -57,8 +61,11 @@ int main() {
     /* TEST UPDATE TEAM RECORDS */
 
     // Update team records
+    printf("goals: %d\n", player1 -> goals);
     updateTeamRecords(match);
     printf("\nUpdated team records.\n");
+    printTeam(homeTeam, true);
+    printTeam(awayTeam, true);
 
     /* USING DESTROY MATCH */
 

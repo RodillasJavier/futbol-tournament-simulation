@@ -96,7 +96,9 @@ void printPlayer(const Player* player)
             strncpy(injuryReport, "Injured", 7);
             injuryReport[7] = '\0';
         }
-        else    // player -> injuryStatus == false
+
+        // player -> injuryStatus == false
+        else
         {
             strncpy(injuryReport, "Healthy", 7);
             injuryReport[7] = '\0';
