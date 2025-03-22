@@ -6,6 +6,7 @@
 ## File Structure (containing all implemented files so far)
 ```
 .
+├── Makefile
 ├── README.md
 ├── modules
 │   ├── match_simulation.c
@@ -18,6 +19,7 @@
 │   ├── team.c
 │   └── team.h
 └── tests
+    ├── test_match.c
     ├── test_player.c
     └── test_team.c
 ```
