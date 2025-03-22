@@ -146,6 +146,9 @@ void recordGoal(Match* match, Player* scorer, int teamIndex, int minute)
 
     // Update players stats
     scoreGoal(scorer);
+
+    // For live score updates
+    // printScoreBoard(match);
 }
 
 // Print the results of the match
