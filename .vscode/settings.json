@@ -6,6 +6,8 @@
         "stdlib.h": "c",
         "typeinfo": "c",
         "string.h": "c",
-        "team.h": "c"
+        "team.h": "c",
+        "match_simulation.h": "c",
+        "match.h": "c"
     }
 }

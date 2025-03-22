@@ -14,10 +14,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Macros (0 => home, 1 => away, -1 => draw)
-#define HOME_TEAM 0
-#define AWAY_TEAM 1
-#define DRAW -1
+
+
+/* HELPER FUNCTION PROTOYPE(s) */
+void printScoreBoard(Match* match);
 
 
 
@@ -66,8 +66,8 @@ Match* createMatch(Team* homeTeam, Team* awayTeam, const char* date)
     match -> scoringMinutes = NULL;
 
     // Set match date
-    strncpy(match -> date, date, sizeof(date) - 1);
-    match -> date[sizeof(date) - 1] = '\0';
+    strncpy(match -> date, date, sizeof(match -> date) - 1);
+    match -> date[sizeof(match -> date) - 1] = '\0';
 
     // Match status
     match -> isCompleted = false;
@@ -290,7 +290,7 @@ int getMatchWinner(Match* match)
 
 
 
-/* HELPER FUNCTIONS */
+/* HELPER FUNCTION(S) */
 
 // Pretty print out the scoreboard
 void printScoreBoard(Match* match)

@@ -8,11 +8,16 @@
 
 
 
-/* INCLUDE STATEMENTS */
+/* INCLUDE & MACRO STATEMENTS STATEMENTS */
 
 #include "player.h"
 #include "team.h"
 #include <stdbool.h>
+
+// Macros (0 => home, 1 => away, -1 => draw)
+#define HOME_TEAM 0
+#define AWAY_TEAM 1
+#define DRAW -1
 
 
 
@@ -35,7 +40,7 @@ typedef struct {
     int* scoringMinutes;
 
     // Game status
-    char* date[20];
+    char date[20];
 
     // Match status
     bool isCompleted;

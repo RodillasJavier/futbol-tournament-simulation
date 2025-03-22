@@ -12,7 +12,7 @@
 
 
 
-/* INCLUDE & MACRO STATEMENTS */
+/* INCLUDE */
 
 #include "match_simulation.h"
 #include <stdbool.h>
@@ -20,9 +20,6 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
-
-#define HOME_TEAM 0
-#define AWAY_TEAM 1
 
 
 
