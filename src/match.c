@@ -5,8 +5,9 @@
 
 
 
-/* INCLUDE STATEMENTS */
+/* INCLUDE & MACRO STATEMENTS */
 
+// Include
 #include "match.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -15,7 +16,12 @@
 
 
 
-/* METHODS */
+/* HELPER FUNCTION PROTOYPE(s) */
+void printScoreBoard(Match* match);
+
+
+
+/* FUNCTIONS */
 
 // Constructor for the Match class
 Match* createMatch(Team* homeTeam, Team* awayTeam, const char* date)
@@ -60,8 +66,8 @@ Match* createMatch(Team* homeTeam, Team* awayTeam, const char* date)
     match -> scoringMinutes = NULL;
 
     // Set match date
-    strncpy(match -> date, date, sizeof(date) - 1);
-    match -> date[sizeof(date) - 1] = '\0';
+    strncpy(match -> date, date, sizeof(match -> date) - 1);
+    match -> date[sizeof(match -> date) - 1] = '\0';
 
     // Match status
     match -> isCompleted = false;
@@ -92,30 +98,24 @@ void destroyMatch(Match* match)
 // Record a goal scored in the match (0 => home; 1 => away)
 void recordGoal(Match* match, Player* scorer, int teamIndex, int minute)
 {
-    // Null check match
+    // Validate input
     if (match == NULL)
     {
         fprintf(stderr, "Error: Tried to record a goal for a match that doesn't exist.\n");
         return;
-    }    
-
-    // Null check scorer
-    if (scorer == NULL)
+    }
+    else if (scorer == NULL)
     {
         fprintf(stderr, "Error: Tried to record a goal by a player that doesn't exist.\n");
         return;
-    }
-
-    // Make sure the team index is either 0 (home) or 1 (away)
-    if (teamIndex != 0 && teamIndex != 1)
+    }   // Make sure the team index is either 0 (home) or 1 (away)
+    else if (teamIndex != 0 && teamIndex != 1)
     {
         fprintf(stderr, "Error: Invalid team index of %d, must be either 0 (home) or 1 (away).\n", 
                 teamIndex);
         return;
     }
-    
-    // Verify 0 <= minute
-    if (minute < 0)
+    else if (minute < 0)
     {
         fprintf(stderr, "Error: Invalid scoring minute of %d, must be non-negative.\n", 
                 minute);
@@ -146,6 +146,9 @@ void recordGoal(Match* match, Player* scorer, int teamIndex, int minute)
 
     // Update players stats
     scoreGoal(scorer);
+
+    // For live score updates
+    // printScoreBoard(match);
 }
 
 // Print the results of the match
@@ -160,7 +163,8 @@ void printMatchResult(Match* match)
     
     // The match hasn't been played yet
     if (match -> isCompleted == false) {
-        printf("%s vs %s: Match not yet played\n", 
+        fprintf(stdout, 
+                "%s vs %s: Match not yet played\n", 
                 match->homeTeam->name, match->awayTeam->name);
     }
 
@@ -184,7 +188,8 @@ void printMatchReport(Match* match)
     
     // The match hasn't been played yet
     if (match -> isCompleted == false) {
-        printf("%s vs %s: Match not yet played\n", 
+        fprintf(stdout, 
+                "%s vs %s: Match not yet played\n", 
                 match->homeTeam->name, match->awayTeam->name);
     }
 
@@ -192,7 +197,7 @@ void printMatchReport(Match* match)
     else 
     {
         // Header
-        printf("Match Report: %s\n", match->date);
+        fprintf(stdout, "Match Report: %s\n", match->date);
 
         // Scoreboard
         printScoreBoard(match);
@@ -200,11 +205,12 @@ void printMatchReport(Match* match)
         // Goal information (if any)
         if (match -> numScorers > 0)
         {
-            printf("\nGoal Scorers:\n");
+            fprintf(stdout, "\nGoal Scorers:\n");
 
             // Print each goal's information
             for (int i = 0; i < match -> numScorers; i++) {
-                printf("%d' - %s (%s)\n", 
+                fprintf(stdout, 
+                        "%d' - %s (%s)\n", 
                         match -> scoringMinutes[i],
                         match -> scorers[i] -> name,
                         // If scoring team was home then => print home team name : else print away team name
@@ -212,12 +218,12 @@ void printMatchReport(Match* match)
             }
         }
 
-        // printf("\nMatch Statistics:\n");
+        // fprintf(stdout, "\nMatch Statistics:\n");
         // Add more statistics here in the future?
     }    
 }
 
-// Update the records of the teams involved in the match
+// Update the records/tables of the teams involved in the match
 void updateTeamRecords(Match* match)
 {
     // Null check match
@@ -234,34 +240,25 @@ void updateTeamRecords(Match* match)
         return;
     }
 
-    // Get the winner of the match
+    // Get the winner of the match & update their record
     int matchWinner = getMatchWinner(match);
-
-    // Home team won
-    if (matchWinner == 0)
-    {
+    if (matchWinner == HOME_TEAM) {
         updateRecord(match -> homeTeam, true, false, false);
         updateRecord(match -> awayTeam, false, true, false);
-    }
-
-    // Away team won
-    else if (matchWinner == 1)
-    {
+    } else if (matchWinner == AWAY_TEAM) {
         updateRecord(match -> homeTeam, false, true, false);
         updateRecord(match -> awayTeam, true, false, false);
-    }
-
-    // Draw
-    else if (matchWinner == -1)
-    {
+    } else if (matchWinner == DRAW) {
         updateRecord(match -> homeTeam, false, false, true);
         updateRecord(match -> awayTeam, false, false, true);
     }
     
+    // Update goals and points for home team
     updateGoals(match -> homeTeam, match -> homeScore, match -> awayScore);
-    updateGoals(match -> awayTeam, match -> awayScore, match -> homeScore);
-
     updatePoints(match -> homeTeam);
+
+    // Update goals and points for away team
+    updateGoals(match -> awayTeam, match -> awayScore, match -> homeScore);
     updatePoints(match -> awayTeam);
 }
 
@@ -282,25 +279,15 @@ int getMatchWinner(Match* match)
         return -2;
     }
 
-    // Home team won => 0
-    if (match -> homeScore > match -> awayScore)
-    {
-        return 0;
-    }
 
-    // Away team won => 1
-    else if (match -> homeScore < match -> awayScore)
-    {
-        return 1;
-    }
-
-    // Neither team won => draw => -1
-    return -1;
+    if (match -> homeScore > match -> awayScore) { return HOME_TEAM; }
+    if (match -> homeScore < match -> awayScore) { return AWAY_TEAM; }
+    return DRAW;
 }
 
 
 
-/* HELPER FUNCTIONS */
+/* HELPER FUNCTION(S) */
 
 // Pretty print out the scoreboard
 void printScoreBoard(Match* match)
@@ -313,7 +300,8 @@ void printScoreBoard(Match* match)
     }
 
     // Scoreboard
-    printf("%s %d - %d %s\n", 
-        match -> homeTeam -> name, match -> homeScore, 
-        match -> awayScore, match -> awayTeam -> name);
+    fprintf(stdout, 
+            "%s %d - %d %s\n", 
+            match -> homeTeam -> name, match -> homeScore, 
+            match -> awayScore, match -> awayTeam -> name);
 }

@@ -6,8 +6,16 @@
  * @details Header file for the team class file
  */
 
+
+
+/* INCLUDE STATEMENTS */
+
 #include "player.h"
 #include <stdbool.h>
+
+
+
+/* FUNCTION PROTOTYPES */
 
 /**
  * Team @struct to represent a club football team
@@ -74,7 +82,7 @@ void destroyTeam(Team* team);
  * 
  * @return bool (true => added to team, false otherwise)
  */
-bool addPlayer(Team* team, const Player* player);
+bool addPlayer(Team* team, Player* player);
 
 /**
  * Remove a specific player from a team, searching for them by number

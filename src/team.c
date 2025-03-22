@@ -15,7 +15,7 @@
 
 
 
-/* METHODS */
+/* FUNCTIONS */
 
 // Create a new team
 Team* createTeam(const char* name, const char* city, const char* coach, const char* homeStadium)
@@ -103,7 +103,7 @@ void destroyTeam(Team* team)
 }
 
 // Add a player to a team
-bool addPlayer(Team* team, const Player* player)
+bool addPlayer(Team* team, Player* player)
 {
     // Null check if the team exists
     if (team == NULL)
@@ -137,18 +137,9 @@ bool addPlayer(Team* team, const Player* player)
             return false;
         }
     }
-    
-    // Create a copy of the player to add to the team
-    Player* newPlayer = createPlayer(0, "", "", 1);
-    if (newPlayer == NULL)
-    {
-        fprintf(stderr, "Error: failed to allocate memory for a player.\n");
-        return false;
-    }
-    copyPlayer(player, newPlayer);
 
     // Add player to roster and increment roster size
-    team -> players[team -> numPlayers] = newPlayer;
+    team -> players[team -> numPlayers] = player;
     team -> numPlayers++;
 
     // Calculate new team rating
@@ -390,33 +381,35 @@ void printTeam(const Team* team, bool showPlayers)
     }
     
     // Name, city, coach & stadium
-    printf("===== %s (%s) =====\n", 
+    fprintf(stdout, "===== %s (%s) =====\n", 
             team->name, team->city);
-    printf("Coach: %s\n", team->coach);
-    printf("Home Stadium: %s\n", team->homeStadium);
+    fprintf(stdout, "Coach: %s\n", team->coach);
+    fprintf(stdout, "Home Stadium: %s\n", team->homeStadium);
 
     // Rating, record & points
-    printf("Team Rating: %.2f\n", team->rating);
-    printf("Record: %d-%d-%d (W-L-D)\n", 
+    fprintf(stdout, "Team Rating: %.2f\n", team->rating);
+    fprintf(stdout, 
+            "Record: %d-%d-%d (W-L-D)\n", 
             team->wins, team->losses, team->draws);
-    printf("Points: %d\n", team->points);
+    fprintf(stdout, "Points: %d\n", team->points);
     
     // Goals
-    printf("Goals: %d scored, %d conceded (Differential: %d)\n", 
+    fprintf(stdout, "Goals: %d scored, %d conceded (Differential: %d)\n", 
            team->goalsScored, team->goalsConceded, team->goalDifferential);
     
     // Roster
-    printf("Players: %d/%d\n", 
-            team->numPlayers, team->maxPlayers);
+    fprintf(stdout, 
+            "Players: %d/%d\n", 
+            team -> numPlayers, team -> maxPlayers);
     
     // OPTIONAL: Print the roster
-    if (showPlayers && team->numPlayers > 0) {
-        printf("\nRoster:\n");
-        for (int i = 0; i < team->numPlayers; i++) {
-            printf("Player %d: ", i + 1);
-            printPlayer(team->players[i]);
+    if (showPlayers && team -> numPlayers > 0) {
+        fprintf(stdout, "\nRoster:\n");
+        for (int i = 0; i < team -> numPlayers; i++) {
+            fprintf(stdout, "Player %d: ", i + 1);
+            printPlayer(team -> players[i]);
         }
     }
     
-    printf("\n");
+    fprintf(stdout, "\n");
 }

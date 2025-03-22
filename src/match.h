@@ -6,9 +6,22 @@
  * @details Header file for the Player class file
  */
 
+
+
+/* INCLUDE & MACRO STATEMENTS STATEMENTS */
+
 #include "player.h"
 #include "team.h"
 #include <stdbool.h>
+
+// Macros (0 => home, 1 => away, -1 => draw)
+#define HOME_TEAM 0
+#define AWAY_TEAM 1
+#define DRAW -1
+
+
+
+/* FUNCTION PROTOTYPES */
 
 /**
  * Match @struct representing a game between two football teams
@@ -27,7 +40,7 @@ typedef struct {
     int* scoringMinutes;
 
     // Game status
-    char* date[20];
+    char date[20];
 
     // Match status
     bool isCompleted;
@@ -74,7 +87,7 @@ void printMatchResult(Match* match);
 void printMatchReport(Match* match);
 
 /**
- * Update the records of the teams involved in the match
+ * Update the records/tables of the teams involved in the match
  * 
  * @param Match that we are interested in
  */
