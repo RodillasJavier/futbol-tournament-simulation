@@ -61,7 +61,6 @@ int main() {
     /* TEST UPDATE TEAM RECORDS */
 
     // Update team records
-    printf("goals: %d\n", player1 -> goals);
     updateTeamRecords(match);
     printf("\nUpdated team records.\n");
     printTeam(homeTeam, true);

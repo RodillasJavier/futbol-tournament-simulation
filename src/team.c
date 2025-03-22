@@ -406,7 +406,6 @@ void printTeam(const Team* team, bool showPlayers)
         for (int i = 0; i < team -> numPlayers; i++) {
             printf("Player %d: ", i + 1);
             printPlayer(team -> players[i]);
-            printf("goals: %d\n", team -> players[i] -> goals);
         }
     }
     
