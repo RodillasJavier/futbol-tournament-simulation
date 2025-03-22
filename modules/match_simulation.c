@@ -12,7 +12,7 @@
 
 
 
-/* INCLUDE STATEMENTS */
+/* INCLUDE & MACRO STATEMENTS */
 
 #include "match_simulation.h"
 #include <stdbool.h>
@@ -20,6 +20,9 @@
 #include <time.h>
 #include <stdio.h>
 #include <string.h>
+
+#define HOME_TEAM 0
+#define AWAY_TEAM 1
 
 
 
@@ -95,7 +98,7 @@ void simulateMatch(Match* match)
     updateTeamRecords(match);
 }
 
-// Calculate the probability of two teams scoring based on ratings
+// Calculate the probability of two teams scoring based on ratings in the range (0.01, 0.1) inclusive
 double calculateScoringProbability(Team* team, Team* opponentTeam)
 {
     // Null check both teams
@@ -121,6 +124,15 @@ double calculateScoringProbability(Team* team, Team* opponentTeam)
 
     // Weight our new scoring probability
     double weightedScoringProbability = scoringProbability * teamRatingRatio;
+
+    // Upper and Lower bounding scoring probabilities
+    if (weightedScoringProbability < 0.01)
+    {
+        return 0.01;
+    } else if (weightedScoringProbability > 0.1)
+    {
+        return 0.1;
+    }
 
     return weightedScoringProbability;
 }
@@ -353,4 +365,86 @@ void simulateInjuries(Match* match)
 }
 
 // Simulate the minutes of a match, from start -> end
-void simulateMatchMinutes(Match* match, int startMinute, int endMinute);
+void simulateMatchMinutes(Match* match, int startMinute, int endMinute)
+{
+    // Validate input
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Tried simulating minutes for a NULL match.\n");
+        return;
+    }
+    else if (match -> homeTeam == NULL || match -> awayTeam == NULL)
+    {
+        fprintf(stderr, "Error: Simulating minutes w/one or more NULL teams - %s or %s.\n", 
+                match -> homeTeam, match -> awayTeam);
+        return;
+    }
+    else if (startMinute < 0 || endMinute < startMinute)
+    {
+        fprintf(stderr, "Error: Invalid minutes, start: %d end: %d.\n", 
+                startMinute, endMinute);
+        return;
+    }
+    
+    // Get Home and Away teams
+    Team* homeTeam = match -> homeTeam;
+    Team* awayTeam = match -> awayTeam;
+
+    // Simulate each minute
+    for (int minute = startMinute; minute <= endMinute; minute++)
+    {
+        // Check if home team scores
+        double homeTeamScoreProbability = calculateScoringProbability(homeTeam, awayTeam);
+        if (randomProbability() < homeTeamScoreProbability)
+        {
+            // Get the player who scored the goal
+            Player* scorer = determineScorer(homeTeam);
+            
+            // Null check our scorer
+            if (scorer == NULL)
+            {
+                fprintf(stderr, "Error: Couldn't find a scorer for %s at %d'.\n", 
+                        homeTeam -> name, minute);
+                continue;
+            }
+
+            // Recording goal for player & home team (0 => home)
+            recordGoal(match, scorer, HOME_TEAM, minute);
+            
+            // Check for assist
+            Player* assister = determineAssist(homeTeam, scorer);
+            if (assister)
+            {
+                // Recording assist for player
+                assist(assister);
+            }
+        }
+
+        // Check if away team scores
+        double awayTeamScoreProbability = calculateScoringProbability(awayTeam, homeTeam);
+        if (randomProbability() < awayTeamScoreProbability)
+        {
+            // Get the player who scored the goal
+            Player* scorer = determineScorer(awayTeam);
+            
+            // Null check our scorer
+            if (scorer == NULL)
+            {
+                fprintf(stderr, "Error: Couldn't find a scorer for %s at %d'.\n", 
+                        awayTeam -> name, minute);
+                continue;
+            }
+
+            // Recording goal for player & away team (1 => away)
+            recordGoal(match, scorer, AWAY_TEAM, minute);
+            
+            // Check for assist
+            Player* assister = determineAssist(awayTeam, scorer);
+            if (assister)
+            {
+                // Recording assist for player
+                assist(assister);
+            }
+        }
+    }
+}

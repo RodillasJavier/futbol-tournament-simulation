@@ -5,13 +5,19 @@
 
 
 
-/* INCLUDE STATEMENTS */
+/* INCLUDE & MACRO STATEMENTS */
 
+// Include
 #include "match.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+// Macros (0 => home, 1 => away, -1 => draw)
+#define HOME_TEAM 0
+#define AWAY_TEAM 1
+#define DRAW -1
 
 
 
@@ -92,30 +98,24 @@ void destroyMatch(Match* match)
 // Record a goal scored in the match (0 => home; 1 => away)
 void recordGoal(Match* match, Player* scorer, int teamIndex, int minute)
 {
-    // Null check match
+    // Validate input
     if (match == NULL)
     {
         fprintf(stderr, "Error: Tried to record a goal for a match that doesn't exist.\n");
         return;
-    }    
-
-    // Null check scorer
-    if (scorer == NULL)
+    }
+    else if (scorer == NULL)
     {
         fprintf(stderr, "Error: Tried to record a goal by a player that doesn't exist.\n");
         return;
-    }
-
-    // Make sure the team index is either 0 (home) or 1 (away)
-    if (teamIndex != 0 && teamIndex != 1)
+    }   // Make sure the team index is either 0 (home) or 1 (away)
+    else if (teamIndex != 0 && teamIndex != 1)
     {
         fprintf(stderr, "Error: Invalid team index of %d, must be either 0 (home) or 1 (away).\n", 
                 teamIndex);
         return;
     }
-    
-    // Verify 0 <= minute
-    if (minute < 0)
+    else if (minute < 0)
     {
         fprintf(stderr, "Error: Invalid scoring minute of %d, must be non-negative.\n", 
                 minute);
@@ -282,20 +282,10 @@ int getMatchWinner(Match* match)
         return -2;
     }
 
-    // Home team won => 0
-    if (match -> homeScore > match -> awayScore)
-    {
-        return 0;
-    }
 
-    // Away team won => 1
-    else if (match -> homeScore < match -> awayScore)
-    {
-        return 1;
-    }
-
-    // Neither team won => draw => -1
-    return -1;
+    if (match -> homeScore > match -> awayScore) { return HOME_TEAM; }
+    if (match -> homeScore < match -> awayScore) { return AWAY_TEAM; }
+    return DRAW;
 }
 
 

@@ -29,7 +29,8 @@ void simulateMatch(Match* match);
  * @param team
  * @param opponentTeam
  * 
- * @return double representing the probability of a team scoring on the opponent team
+ * @return double   representing the probability of two teams scoring based on 
+ *                  ratings in the range (0.01, 0.1) inclusive
  */
 double calculateScoringProbability(Team* team, Team* opponentTeam);
 
