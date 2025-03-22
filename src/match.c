@@ -163,7 +163,8 @@ void printMatchResult(Match* match)
     
     // The match hasn't been played yet
     if (match -> isCompleted == false) {
-        printf("%s vs %s: Match not yet played\n", 
+        fprintf(stdout, 
+                "%s vs %s: Match not yet played\n", 
                 match->homeTeam->name, match->awayTeam->name);
     }
 
@@ -187,7 +188,8 @@ void printMatchReport(Match* match)
     
     // The match hasn't been played yet
     if (match -> isCompleted == false) {
-        printf("%s vs %s: Match not yet played\n", 
+        fprintf(stdout, 
+                "%s vs %s: Match not yet played\n", 
                 match->homeTeam->name, match->awayTeam->name);
     }
 
@@ -195,7 +197,7 @@ void printMatchReport(Match* match)
     else 
     {
         // Header
-        printf("Match Report: %s\n", match->date);
+        fprintf(stdout, "Match Report: %s\n", match->date);
 
         // Scoreboard
         printScoreBoard(match);
@@ -203,11 +205,12 @@ void printMatchReport(Match* match)
         // Goal information (if any)
         if (match -> numScorers > 0)
         {
-            printf("\nGoal Scorers:\n");
+            fprintf(stdout, "\nGoal Scorers:\n");
 
             // Print each goal's information
             for (int i = 0; i < match -> numScorers; i++) {
-                printf("%d' - %s (%s)\n", 
+                fprintf(stdout, 
+                        "%d' - %s (%s)\n", 
                         match -> scoringMinutes[i],
                         match -> scorers[i] -> name,
                         // If scoring team was home then => print home team name : else print away team name
@@ -215,7 +218,7 @@ void printMatchReport(Match* match)
             }
         }
 
-        // printf("\nMatch Statistics:\n");
+        // fprintf(stdout, "\nMatch Statistics:\n");
         // Add more statistics here in the future?
     }    
 }
@@ -297,7 +300,8 @@ void printScoreBoard(Match* match)
     }
 
     // Scoreboard
-    printf("%s %d - %d %s\n", 
-        match -> homeTeam -> name, match -> homeScore, 
-        match -> awayScore, match -> awayTeam -> name);
+    fprintf(stdout, 
+            "%s %d - %d %s\n", 
+            match -> homeTeam -> name, match -> homeScore, 
+            match -> awayScore, match -> awayTeam -> name);
 }

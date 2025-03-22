@@ -110,7 +110,7 @@ double calculateScoringProbability(Team* team, Team* opponentTeam)
     }
 
     // Set base scoring probability
-    double scoringProbability = 0.0357;
+    double scoringProbability = 0.015;
 
     // Get team ratings
     double teamRating = calculateTeamRating(team);
@@ -340,7 +340,8 @@ void simulateInjuries(Match* match)
         if (randomProbability() < 0.025 && player -> injuryStatus == false)
         {
             updateInjuryStatus(player, true);
-            printf("INJURY: %s (%s) was injured during the match!\n", 
+            fprintf(stdout, 
+                    "INJURY: %s (%s) was injured during the match!\n", 
                     player -> name, homeTeam -> name);
         }
     }
@@ -355,7 +356,8 @@ void simulateInjuries(Match* match)
         if (randomProbability() < 0.025 && player -> injuryStatus == false)
         {
             updateInjuryStatus(player, true);
-            printf("INJURY: %s (%s) was injured during the match!\n", 
+            fprintf(stdout, 
+                    "INJURY: %s (%s) was injured during the match!\n", 
                     player -> name, awayTeam -> name);
         }
     }
@@ -373,7 +375,7 @@ void simulateMatchMinutes(Match* match, int startMinute, int endMinute)
     else if (match -> homeTeam == NULL || match -> awayTeam == NULL)
     {
         fprintf(stderr, "Error: Simulating minutes w/one or more NULL teams - %s or %s.\n", 
-                match -> homeTeam, match -> awayTeam);
+                match -> homeTeam -> name, match -> awayTeam -> name);
         return;
     }
     else if (startMinute < 0 || endMinute < startMinute)

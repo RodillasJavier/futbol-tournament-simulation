@@ -381,33 +381,35 @@ void printTeam(const Team* team, bool showPlayers)
     }
     
     // Name, city, coach & stadium
-    printf("===== %s (%s) =====\n", 
+    fprintf(stdout, "===== %s (%s) =====\n", 
             team->name, team->city);
-    printf("Coach: %s\n", team->coach);
-    printf("Home Stadium: %s\n", team->homeStadium);
+    fprintf(stdout, "Coach: %s\n", team->coach);
+    fprintf(stdout, "Home Stadium: %s\n", team->homeStadium);
 
     // Rating, record & points
-    printf("Team Rating: %.2f\n", team->rating);
-    printf("Record: %d-%d-%d (W-L-D)\n", 
+    fprintf(stdout, "Team Rating: %.2f\n", team->rating);
+    fprintf(stdout, 
+            "Record: %d-%d-%d (W-L-D)\n", 
             team->wins, team->losses, team->draws);
-    printf("Points: %d\n", team->points);
+    fprintf(stdout, "Points: %d\n", team->points);
     
     // Goals
-    printf("Goals: %d scored, %d conceded (Differential: %d)\n", 
+    fprintf(stdout, "Goals: %d scored, %d conceded (Differential: %d)\n", 
            team->goalsScored, team->goalsConceded, team->goalDifferential);
     
     // Roster
-    printf("Players: %d/%d\n", 
+    fprintf(stdout, 
+            "Players: %d/%d\n", 
             team -> numPlayers, team -> maxPlayers);
     
     // OPTIONAL: Print the roster
     if (showPlayers && team -> numPlayers > 0) {
-        printf("\nRoster:\n");
+        fprintf(stdout, "\nRoster:\n");
         for (int i = 0; i < team -> numPlayers; i++) {
-            printf("Player %d: ", i + 1);
+            fprintf(stdout, "Player %d: ", i + 1);
             printPlayer(team -> players[i]);
         }
     }
     
-    printf("\n");
+    fprintf(stdout, "\n");
 }
