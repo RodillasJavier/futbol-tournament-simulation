@@ -9,6 +9,7 @@
         "team.h": "c",
         "match_simulation.h": "c",
         "match.h": "c",
-        "player.h": "c"
+        "player.h": "c",
+        "league": "cpp"
     }
 }
