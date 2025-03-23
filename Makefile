@@ -2,70 +2,83 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -std=c99 -g
 
-# Directories
+# Directory variables
 SRC_DIR = src
-MODULES_DIR = modules
+MODULES_DIR = $(SRC_DIR)/modules
+UTILS_DIR = $(SRC_DIR)/utils
 TEST_DIR = tests
 BUILD_DIR = build
 BIN_DIR = bin
 
-# Source files
+# Include directories -- 	Set include flags to look in our source and module
+# 							directories for any header files
+INCLUDES = -I$(SRC_DIR) -I$(MODULES_DIR) -I$(UTILS_DIR)
+
+
+
+# Source files --	Finds all c files in each directory
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 MODULE_FILES = $(wildcard $(MODULES_DIR)/*.c)
+UTILS_FILES = $(wildcard $(UTILS_DIR)/*.c)
 TEST_FILES = $(wildcard $(TEST_DIR)/*.c)
 
-# Object files
+# Object files --	Convert file paths from dir/foo.c to build/foo.o
 SRC_OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRC_FILES))
 MODULE_OBJS = $(patsubst $(MODULES_DIR)/%.c,$(BUILD_DIR)/%.o,$(MODULE_FILES))
+UTILS_OBJS = $(patsubst $(UTILS_DIR)/%.c,$(BUILD_DIR)/%.o,$(UTILS_FILES))
 
-# Test executables
+# Test executables --	file paths for our executables that we generate, stored
+#						in our bin directory
 TEST_PLAYER = $(BIN_DIR)/test_player
 TEST_TEAM = $(BIN_DIR)/test_team
 TEST_MATCH = $(BIN_DIR)/test_match
 
-# Include directories
-INCLUDES = -I$(SRC_DIR) -I$(MODULES_DIR)
 
-# Phony targets
+
+# Phony targets --	Commands for our make file
 .PHONY: all clean dirs test_player test_team test_match tests
 
-# Default target
+# Default target --	when running 'make' from command line, just build all
 all: dirs $(TEST_PLAYER) $(TEST_TEAM) $(TEST_MATCH)
 
-# Create build directories
+
+
+# Create our 'build' and 'bin' directories
 dirs:
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(BIN_DIR)
 
-# Compile source files
+
+
+# Compilation --	Compile any .c files in 'source' or 'module' directories into
+# 					.o files in build. '-c $< -o $@' ~ "-c input to -o output"
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
-# Compile module files
 $(BUILD_DIR)/%.o: $(MODULES_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(BUILD_DIR)/%.o: $(UTILS_DIR)/%.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-# Link test_player
+# Linking test files --	Link test and class object files together to make test
+# 						executables. '$^ -o $@' ~ link all dependency objects 
+# 						to output an executable.
 $(TEST_PLAYER): $(BUILD_DIR)/test_player.o $(BUILD_DIR)/player.o
 	$(CC) $(CFLAGS) $^ -o $@
-
-# Link test_team
 $(TEST_TEAM): $(BUILD_DIR)/test_team.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o
 	$(CC) $(CFLAGS) $^ -o $@
-
-# Link test_match
-$(TEST_MATCH): $(BUILD_DIR)/test_match.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/match_simulation.o
+$(TEST_MATCH): $(BUILD_DIR)/test_match.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
 	$(CC) $(CFLAGS) $^ -o $@
 
-# Compile test files
+# Compile test files --	Compile test c files into test object files: 
+# 						'test/test.c => build/test.o'
 $(BUILD_DIR)/test_player.o: $(TEST_DIR)/test_player.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
 $(BUILD_DIR)/test_team.o: $(TEST_DIR)/test_team.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
-
 $(BUILD_DIR)/test_match.o: $(TEST_DIR)/test_match.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+
 
 # Run tests
 test_player: $(TEST_PLAYER)

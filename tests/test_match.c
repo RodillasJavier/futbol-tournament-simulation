@@ -3,84 +3,18 @@
  * @details Test file for the match.c class.
  */
 
+ /* INCLUDE STATEMENTS */
+
 #include "match.h"
-#include "match_simulation.h"
+#include "modules/match_simulation.h"
 #include "team.h"
 #include "player.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-// int main() {
-//     // Create teams
-//     Team* homeTeam = createTeam("Barcelona F.C.", "Barcelona", "Hansi Flick", "Camp Nou");
-//     Team* awayTeam = createTeam("Real Madrid C.F.", "Madrid", "Carlo Ancelotti", "Bernabeu");
-    
-//     // Create players
-//     Player* player1 = createPlayer(9, "fwd", "Lamine Yamal", 81);
-//     Player* player2 = createPlayer(10, "mid", "Jude Bellingham", 90);
 
-//     // Add them to the roster
-//     addPlayer(homeTeam, player1);
-//     addPlayer(awayTeam, player2);
 
-//     /* TESTING MATCH CREATION */
-
-//     // Create a match
-//     Match* match = createMatch(homeTeam, awayTeam, "2025-03-21");
-//     if (match == NULL) {
-//         fprintf(stdout, "Failed to create match.\n");
-//         return 1;
-//     }
-
-//     // Print for match creation
-//     fprintf(stdout, "\nMatch created: %s vs %s on %s\n", 
-//             match -> homeTeam -> name, 
-//             match -> awayTeam -> name, 
-//             match -> date);
-//     fprintf(stdout, "\n");
-
-//     /* TESTING RECORD GOAL */
-
-//     // Record goals
-//     recordGoal(match, player1, HOME_TEAM, 15);
-//     recordGoal(match, player2, AWAY_TEAM, 30);
-
-//     /* TEST PRINT MATCH RESULT */
-
-//     // Print match result before marking completion
-//     printMatchResult(match);
-//     fprintf(stdout, "\n");
-
-//     // Mark match as completed
-//     match -> isCompleted = true;
-
-//     // Print match result after marking completion
-//     printMatchResult(match);
-//     fprintf(stdout, "\n");
-
-//     /* TEST PRINT MATCH REPORT */
-
-//     // Print match report
-//     printMatchReport(match);
-//     fprintf(stdout, "\n");
-
-//     /* TEST UPDATE TEAM RECORDS */
-
-//     // Update team records
-//     updateTeamRecords(match);
-//     fprintf(stdout, "\nUpdated team records.\n");
-//     printTeam(homeTeam, true);
-//     printTeam(awayTeam, true);
-
-//     /* USING DESTROY MATCH */
-
-//     // Destroy the match
-//     destroyMatch(match);
-//     fprintf(stdout, "\nMatch destroyed successfully.\n");
-
-//     return 0;
-// }
-
+/* MAIN FUNCTION */
 int main() {
     // Create two teams
     Team* barcelona = createTeam("Barcelona", "Barcelona", "Xavi", "Camp Nou");
@@ -106,9 +40,9 @@ int main() {
     
     // Print team information before the match
     printf("===== TEAMS BEFORE MATCH =====\n\n");
-    printTeam(barcelona, true);
+    printTeam(barcelona, false);
     printf("\n");
-    printTeam(realMadrid, true);
+    printTeam(realMadrid, false);
     printf("\n");
     
     // Create a match

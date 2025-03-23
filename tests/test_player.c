@@ -1,6 +1,9 @@
 /**
  * @author Javier A. Rodillas
  * @details Test file for the Player.c class.
+ * 
+ * @cite    Implementation of randomInt from: 
+ *          https://www.quora.com/How-do-I-get-a-random-number-from-1-to-100-in-the-C-language
  */
 
 #include "player.h"
