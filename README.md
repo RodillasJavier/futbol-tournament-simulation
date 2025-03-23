@@ -8,16 +8,21 @@
 .
 ├── Makefile
 ├── README.md
-├── modules
-│   ├── match_simulation.c
-│   └── match_simulation.h
 ├── src
+│   ├── league.c
+│   ├── league.h
 │   ├── match.c
 │   ├── match.h
+│   ├── modules
+│   │   ├── match_simulation.c
+│   │   └── match_simulation.h
 │   ├── player.c
 │   ├── player.h
 │   ├── team.c
-│   └── team.h
+│   ├── team.h
+│   └── utils
+│       ├── random_utils.c
+│       └── random_utils.h
 └── tests
     ├── test_match.c
     ├── test_player.c
