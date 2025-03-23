@@ -1,4 +1,7 @@
 #include "league.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 /* HELPER FUNCTION PROTOTYPE(s)*/
 int compareTeams(const void* a, const void* b, void* league);
@@ -6,7 +9,39 @@ int compareTeams(const void* a, const void* b, void* league);
 /* FUNCTIONS */
 
 // Create a new league with a name and region
-League* createLeague(const char* name, const char* region, int maxTeams);
+League* createLeague(const char* name, const char* region, int maxTeams)
+{
+    // Validate input
+    if (name == NULL) {
+        fprintf(stderr, "Error: Tried to set league name to a NULL string.\n");
+        return NULL;
+    } else if (region == NULL) {
+        fprintf(stderr, "Error: Tried to set league region to a NULL string.\n");
+        return NULL;
+    }
+
+    // Create league & NULL check
+    League* league = (League*)malloc(sizeof(League));
+    if (league == NULL)
+    {
+        fprintf(stderr, "Error: failed to allocate memory for a league.\n");
+        return NULL;
+    }
+
+    // Name
+    strncpy(league -> name, name, sizeof(league -> name) - 1);
+    league -> name[sizeof(league -> name)] = '\0';
+
+    // Region
+
+    // Teams
+
+    // Schedule
+
+    // League table
+
+
+}
 
 // Free all memory allocated for the league
 void destroyLeague(League* league);
