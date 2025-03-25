@@ -110,7 +110,51 @@ void destroyLeague(League* league)
 }
 
 // Add a team to the league
-bool addTeamToLeague(League* league, Team* team);
+bool addTeamToLeague(League* league, Team* team)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot add team to NULL league.\n");
+        return false;
+    } else if (team == NULL) {
+        fprintf(stderr, "Error: Cannot add NULL team to league.\n");
+        return false;
+    
+    }
+
+    // Check if league is full
+    if (league -> numTeams >= league -> maxTeams)
+    {
+        fprintf(stderr, "Error: The league '%s' is already at maximum capacity (%d teams).\n", 
+                league -> name, league -> maxTeams);
+        return false;
+    }
+
+    // Check if team already exists in the league
+    for (int teamIndex = 0; teamIndex < league -> numTeams; teamIndex++)
+    {
+        // If we find two teams with the same name => same team
+        if (strcmp(league -> teams[teamIndex] -> name, team -> name) == 0)
+        {
+            fprintf(stderr, "Error: Team '%s' is already in the league.\n", 
+                    team -> name);
+            return false;
+        }
+    }
+
+    // Add team to the league and increase our num teams counter
+    league -> teams[league -> numTeams] = team;
+    league -> numTeams++;
+
+    // If schedule was already generated, it's now invalid
+    if (league -> scheduleGenerated == true)
+    {
+        fprintf(stderr, "Warning: Adding a team invalidates the current schedule. Please regenerate the schedule for the league.\n");
+        league -> scheduleGenerated = false;
+    }
+
+    return true;
+}
 
 // Remove a team from the league by name
 bool removeTeamFromLeague(League* league, const char* teamName);
