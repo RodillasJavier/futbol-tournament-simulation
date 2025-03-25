@@ -10,6 +10,7 @@
 #include "player.h"
 #include "team.h"
 #include "match.h"
+#include "modules/match_simulation.h"
 #include <stdbool.h>
 
 #define MAX_LEAGUE_NAME_LENGTH 50

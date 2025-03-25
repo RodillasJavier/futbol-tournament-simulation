@@ -18,10 +18,8 @@
 
 
 /* HELPER FUNCTION PROTOTYPE(s)*/
-int compareTeams(const void* a, const void* b, void* league);
 void destroySchedule(League* league);
 bool generateRound(League* league, int* teamIndices, int startMatchday, bool swapHomeAway);
-
 
 
 
@@ -223,9 +221,11 @@ bool generateSchedule(League* league)
         fprintf(stderr, "Error: Need at least 2 teams to generate a schedule.\n");
         return false;
     }
-
     // Clean up existing schedule if there is one
-    destroySchedule(league);
+    if (league -> schedule != NULL)
+    {
+        destroySchedule(league);
+    }
 
     /*
      * For a round-robin tournament, each team plays against every other team
@@ -289,7 +289,7 @@ bool generateSchedule(League* league)
         free(teamIndices);
         return false;
     }
-    
+
     // Generate the second half of the season
     bool secondRoundGenerated = generateRound(league, teamIndices, matchdaysPerRound, true);
     if (secondRoundGenerated == false)
@@ -300,10 +300,9 @@ bool generateSchedule(League* league)
         return false;
     }
     
-
     free(teamIndices);
     league -> scheduleGenerated = true;
-    
+
     // Initialize league table
     updateLeagueTable(league);
 
@@ -452,7 +451,6 @@ void updateLeagueTable(League* league)
         return;
     }
     
-
     // Initialize or clear the league table
     if (league -> leagueTable == NULL)
     {
@@ -494,8 +492,52 @@ void updateLeagueTable(League* league)
         league -> leagueTable[i][1] = team -> points;
     }
 
-    // Sort the table by points (descending)
-    qsort_r(league -> leagueTable, league -> numTeams, sizeof(int*), compareTeams, league);
+    // Using a simple bubble sort for clarity, can be optimized
+    for (int i = 0; i < league->numTeams - 1; i++) {
+        for (int j = 0; j < league->numTeams - i - 1; j++) {
+            Team* teamA = league->teams[league->leagueTable[j][0]];
+            Team* teamB = league->teams[league->leagueTable[j+1][0]];
+            
+            // Primary sort by points (descending)
+            if (teamA->points < teamB->points)
+            {
+                // Swap
+                int tempIdx = league->leagueTable[j][0];
+                int tempPoints = league->leagueTable[j][1];
+                league->leagueTable[j][0] = league->leagueTable[j+1][0];
+                league->leagueTable[j][1] = league->leagueTable[j+1][1];
+                league->leagueTable[j+1][0] = tempIdx;
+                league->leagueTable[j+1][1] = tempPoints;
+            }
+
+            // If points are equal, sort by goal difference (descending)
+            else if (teamA->points == teamB->points && 
+                    teamA->goalDifferential < teamB->goalDifferential)
+            {
+                // Swap
+                int tempIdx = league->leagueTable[j][0];
+                int tempPoints = league->leagueTable[j][1];
+                league->leagueTable[j][0] = league->leagueTable[j+1][0];
+                league->leagueTable[j][1] = league->leagueTable[j+1][1];
+                league->leagueTable[j+1][0] = tempIdx;
+                league->leagueTable[j+1][1] = tempPoints;
+            }
+
+            // If points and goal difference are equal, sort by goals scored (descending)
+            else if (teamA->points == teamB->points && 
+                    teamA->goalDifferential == teamB->goalDifferential &&
+                    teamA->goalsScored < teamB->goalsScored)
+            {
+                // Swap
+                int tempIdx = league->leagueTable[j][0];
+                int tempPoints = league->leagueTable[j][1];
+                league->leagueTable[j][0] = league->leagueTable[j+1][0];
+                league->leagueTable[j][1] = league->leagueTable[j+1][1];
+                league->leagueTable[j+1][0] = tempIdx;
+                league->leagueTable[j+1][1] = tempPoints;
+            }
+        }
+    }
 }
 
 // Get a team from the league by name
@@ -713,61 +755,25 @@ void printMatchdayResults(const League* league, int matchday)
 
 /* HELER FUNCTIONS */
 
-// Helper function to compare teams for sorting the league table
-int compareTeams(const void* a, const void* b, void* leaguePtr)
-{
-    League* league = (League*)leaguePtr;
-    int idxA = *((int*)a);
-    int idxB = *((int*)b);
-    
-    Team* teamA = league -> teams[idxA];
-    Team* teamB = league -> teams[idxB];
-    
-    // Primary sort by points (descending)
-    if (teamA -> points != teamB -> points)
-    {
-        return teamB -> points - teamA -> points;
-    }
-    
-    // Secondary sort by goal difference (descending)
-    if (teamA -> goalDifferential != teamB -> goalDifferential)
-    {
-        return teamB -> goalDifferential - teamA -> goalDifferential;
-    }
-    
-    // Tertiary sort by goals scored (descending)
-    if (teamA -> goalsScored != teamB -> goalsScored)
-    {
-        return teamB -> goalsScored - teamA -> goalsScored;
-    }
-    
-    // If all else is equal, sort alphabetically by name
-    return strcmp(teamA -> name, teamB -> name);
-}
-
 // Helper function to free/clean up the schedule of a league
 void destroySchedule(League* league)
 {
-    // Free schedule if it exists
-    if (league -> schedule != NULL)
+    // Look at each matchday
+    for (int matchday = 0; matchday < league -> numMatchdays; matchday++)
     {
-        // Look at each matchday
-        for (int matchday = 0; matchday < league -> numMatchdays; matchday++)
+        // If there is a game (or more) on that day
+        if (league -> schedule[matchday] != NULL)
         {
-            // If there is a game (or more) on that day
-            if (league -> schedule[matchday] != NULL)
+            // Look at each match during that matchday
+            for (int match = 0; match < league -> matchesPerMatchday[matchday]; match++)
             {
-                // Look at each match during that matchday
-                for (int match = 0; match < league -> matchesPerMatchday[matchday]; match++)
-                {
-                    destroyMatch(league -> schedule[matchday][match]);
-                }
-                free(league -> schedule[matchday]);
+                destroyMatch(league -> schedule[matchday][match]);
             }
+            free(league -> schedule[matchday]);
         }
-        free(league -> schedule);
-        free(league -> matchesPerMatchday);
     }
+    free(league -> schedule);
+    free(league -> matchesPerMatchday);
 }
 
 // Helper function to generate a round of a round-robin tournament
@@ -826,4 +832,6 @@ bool generateRound(League* league, int* teamIndices, int startMatchday, bool swa
         }
         teamIndices[league -> numTeams - 1] = temp;
     }
+
+    return true;
 }
