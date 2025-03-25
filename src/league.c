@@ -74,25 +74,7 @@ void destroyLeague(League* league)
     free(league -> teams);
 
     // Free schedule if it exists
-    if (league -> schedule != NULL)
-    {
-        // Look at each matchday
-        for (int matchday = 0; matchday < league -> numMatchdays; matchday++)
-        {
-            // If there is a game (or more) on that day
-            if (league -> schedule[matchday] != NULL)
-            {
-                // Look at each match during that matchday
-                for (int match = 0; match < league -> matchesPerMatchday[matchday]; match++)
-                {
-                    destroyMatch(league -> schedule[matchday][match]);
-                }
-                free(league -> schedule[matchday]);
-            }
-        }
-        free(league -> schedule);
-        free(league -> matchesPerMatchday);
-    }
+    destroySchedule(league);
 
     // Free league table if it exists
     if (league -> leagueTable != NULL)
@@ -207,7 +189,199 @@ bool removeTeamFromLeague(League* league, const char* teamName)
 }
 
 // Generate a schedule for the league (each team plays each other twice)
-bool generateSchedule(League* league);
+bool generateSchedule(League* league)
+{
+    // Null check league
+    if (league == NULL)
+    {
+        fprintf(stderr, "Error: Cannot generate schedule for NULL league.\n");
+        return false;
+    }
+
+    // Make sure there are at least 2 teams to create a schedule
+    if (league -> numTeams < 2)
+    {
+        fprintf(stderr, "Error: Need at least 2 teams to generate a schedule.\n");
+        return false;
+    }
+
+    // Clean up existing schedule if there is one
+    destroySchedule(league);
+
+    // For a round-robin tournament, each team plays against every other team
+    // If there are n teams, each team plays (n-1) matches, so total matchdays = (n-1)
+    // Total matches per round = n/2 (each matchday has n/2 matches)
+    // For a double round-robin, we have 2*(n-1) matchdays
+
+    int matchdaysPerRound = league->numTeams - 1;
+    league->numMatchdays = 2 * matchdaysPerRound; // Double round-robin
+    league->currentMatchday = 0;
+
+    // Allocate memory for the schedule
+    league->schedule = (Match***)malloc(league->numMatchdays * sizeof(Match**));
+    if (league->schedule == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for schedule.\n");
+        return false;
+    }
+
+    league->matchesPerMatchday = (int*)malloc(league->numMatchdays * sizeof(int));
+    if (league->matchesPerMatchday == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for matchesPerMatchday.\n");
+        free(league->schedule);
+        league->schedule = NULL;
+        return false;
+    }
+
+    // Initialize matchesPerMatchday
+    for (int i = 0; i < league->numMatchdays; i++) {
+        league->matchesPerMatchday[i] = league->numTeams / 2;
+    }
+
+    // Create a temporary array of team indices for scheduling
+    int* teamIndices = (int*)malloc(league->numTeams * sizeof(int));
+    if (teamIndices == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for teamIndices.\n");
+        free(league->schedule);
+        free(league->matchesPerMatchday);
+        league->schedule = NULL;
+        league->matchesPerMatchday = NULL;
+        return false;
+    }
+
+    for (int i = 0; i < league->numTeams; i++) {
+        teamIndices[i] = i;
+    }
+
+    // Generate first half of the season (first round-robin)
+    for (int matchday = 0; matchday < matchdaysPerRound; matchday++) {
+        // Allocate memory for matches on this matchday
+        league->schedule[matchday] = (Match**)malloc(league->matchesPerMatchday[matchday] * sizeof(Match*));
+        if (league->schedule[matchday] == NULL) {
+            fprintf(stderr, "Error: Failed to allocate memory for matchday %d.\n", matchday);
+            free(teamIndices);
+            // Clean up already allocated memory
+            for (int i = 0; i < matchday; i++) {
+                for (int j = 0; j < league->matchesPerMatchday[i]; j++) {
+                    destroyMatch(league->schedule[i][j]);
+                }
+                free(league->schedule[i]);
+            }
+            free(league->schedule);
+            free(league->matchesPerMatchday);
+            league->schedule = NULL;
+            league->matchesPerMatchday = NULL;
+            return false;
+        }
+
+        // Create matches for this matchday
+        for (int i = 0; i < league->numTeams / 2; i++) {
+            int homeIdx = teamIndices[i];
+            int awayIdx = teamIndices[league->numTeams - 1 - i];
+            
+            // Create a date string (placeholder)
+            char dateStr[20];
+            sprintf(dateStr, "MD%d", matchday + 1);
+            
+            // Create the match
+            Match* match = createMatch(league->teams[homeIdx], league->teams[awayIdx], dateStr);
+            if (match == NULL) {
+                fprintf(stderr, "Error: Failed to create match for matchday %d.\n", matchday);
+                free(teamIndices);
+                // Clean up
+                for (int j = 0; j < i; j++) {
+                    destroyMatch(league->schedule[matchday][j]);
+                }
+                for (int j = 0; j < matchday; j++) {
+                    for (int k = 0; k < league->matchesPerMatchday[j]; k++) {
+                        destroyMatch(league->schedule[j][k]);
+                    }
+                    free(league->schedule[j]);
+                }
+                free(league->schedule);
+                free(league->matchesPerMatchday);
+                league->schedule = NULL;
+                league->matchesPerMatchday = NULL;
+                return false;
+            }
+            
+            league->schedule[matchday][i] = match;
+        }
+
+        // Rotate teams for next matchday (keeping first team fixed)
+        int temp = teamIndices[1];
+        for (int i = 1; i < league->numTeams - 1; i++) {
+            teamIndices[i] = teamIndices[i + 1];
+        }
+        teamIndices[league->numTeams - 1] = temp;
+    }
+
+    // Generate second half of the season (second round-robin with home/away swapped)
+    for (int matchday = 0; matchday < matchdaysPerRound; matchday++) {
+        int secondHalfMatchday = matchday + matchdaysPerRound;
+        
+        // Allocate memory for matches on this matchday
+        league->schedule[secondHalfMatchday] = (Match**)malloc(league->matchesPerMatchday[secondHalfMatchday] * sizeof(Match*));
+        if (league->schedule[secondHalfMatchday] == NULL) {
+            fprintf(stderr, "Error: Failed to allocate memory for matchday %d.\n", secondHalfMatchday);
+            free(teamIndices);
+            // Clean up
+            for (int i = 0; i <= matchday + matchdaysPerRound - 1; i++) {
+                if (league->schedule[i] != NULL) {
+                    for (int j = 0; j < league->matchesPerMatchday[i]; j++) {
+                        destroyMatch(league->schedule[i][j]);
+                    }
+                    free(league->schedule[i]);
+                }
+            }
+            free(league->schedule);
+            free(league->matchesPerMatchday);
+            league->schedule = NULL;
+            league->matchesPerMatchday = NULL;
+            return false;
+        }
+
+        // Create matches for this matchday (swap home/away from first half)
+        for (int i = 0; i < league->matchesPerMatchday[matchday]; i++) {
+            Match* firstHalfMatch = league->schedule[matchday][i];
+            
+            // Create a date string (placeholder)
+            char dateStr[20];
+            sprintf(dateStr, "MD%d", secondHalfMatchday + 1);
+            
+            // Create the match with home/away swapped
+            Match* match = createMatch(firstHalfMatch->awayTeam, firstHalfMatch->homeTeam, dateStr);
+            if (match == NULL) {
+                fprintf(stderr, "Error: Failed to create match for matchday %d.\n", secondHalfMatchday);
+                free(teamIndices);
+                // Clean up
+                for (int j = 0; j < i; j++) {
+                    destroyMatch(league->schedule[secondHalfMatchday][j]);
+                }
+                for (int j = 0; j <= secondHalfMatchday - 1; j++) {
+                    for (int k = 0; k < league->matchesPerMatchday[j]; k++) {
+                        destroyMatch(league->schedule[j][k]);
+                    }
+                    free(league->schedule[j]);
+                }
+                free(league->schedule);
+                free(league->matchesPerMatchday);
+                league->schedule = NULL;
+                league->matchesPerMatchday = NULL;
+                return false;
+            }
+            
+            league->schedule[secondHalfMatchday][i] = match;
+        }
+    }
+
+    free(teamIndices);
+    league->scheduleGenerated = true;
+    
+    // Initialize league table
+    updateLeagueTable(league);
+
+    return true;
+}
 
 // Simulate the next matchday in the league
 bool simulateMatchday(League* league);
@@ -245,3 +419,28 @@ void printMatchdayResults(const League* league, int matchday);
 
 // Helper function to compare teams for sorting the league table
 int compareTeams(const void* a, const void* b, void* league);
+
+// Helper function to free/clean up the schedule of a league
+void destroySchedule(League* league)
+{
+    // Free schedule if it exists
+    if (league -> schedule != NULL)
+    {
+        // Look at each matchday
+        for (int matchday = 0; matchday < league -> numMatchdays; matchday++)
+        {
+            // If there is a game (or more) on that day
+            if (league -> schedule[matchday] != NULL)
+            {
+                // Look at each match during that matchday
+                for (int match = 0; match < league -> matchesPerMatchday[matchday]; match++)
+                {
+                    destroyMatch(league -> schedule[matchday][match]);
+                }
+                free(league -> schedule[matchday]);
+            }
+        }
+        free(league -> schedule);
+        free(league -> matchesPerMatchday);
+    }
+}
