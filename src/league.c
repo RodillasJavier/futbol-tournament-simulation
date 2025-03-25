@@ -157,7 +157,54 @@ bool addTeamToLeague(League* league, Team* team)
 }
 
 // Remove a team from the league by name
-bool removeTeamFromLeague(League* league, const char* teamName);
+bool removeTeamFromLeague(League* league, const char* teamName)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot remove team from NULL league.\n");
+        return false;
+    } else if (teamName == NULL) {
+        fprintf(stderr, "Error: Cannot remove team with NULL name.\n");
+        return false;
+    }
+
+    // Find the team we want to remove
+    int teamIndex = -1;
+    for (int i = 0; i < league -> numTeams; i++)
+    {
+        // If we find a team with a matching name
+        if (strcmp(league -> teams[i] -> name, teamName) == 0)
+        {
+            teamIndex = i;
+            break;
+        }
+    }
+
+    // If we didn't find any teams with matching names
+    if (teamIndex == -1)
+    {
+        fprintf(stderr, "Error: Team '%s' not found in the league '%s'.\n", 
+                teamName, league -> name);
+        return false;
+    }
+
+    // Shift all teams left to fill the gap
+    for (int i = teamIndex; i < league -> numTeams - 1; i++)
+    {
+        league -> teams[i] = league -> teams[i + 1];
+    }
+
+    league -> numTeams--;
+
+    // If schedule was already generated, it's now invalid
+    if (league->scheduleGenerated)
+    {
+        fprintf(stderr, "Warning: Removing a team invalidates the current schedule. Please regenerate.\n");
+        league -> scheduleGenerated = false;
+    }
+
+    return true;
+}
 
 // Generate a schedule for the league (each team plays each other twice)
 bool generateSchedule(League* league);
