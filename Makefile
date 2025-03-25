@@ -32,14 +32,15 @@ UTILS_OBJS = $(patsubst $(UTILS_DIR)/%.c,$(BUILD_DIR)/%.o,$(UTILS_FILES))
 TEST_PLAYER = $(BIN_DIR)/test_player
 TEST_TEAM = $(BIN_DIR)/test_team
 TEST_MATCH = $(BIN_DIR)/test_match
+TEST_LEAGUE = $(BIN_DIR)/test_league
 
 
 
 # Phony targets --	Commands for our make file
-.PHONY: all clean dirs test_player test_team test_match tests
+.PHONY: all clean dirs test_player test_team test_match test_league tests
 
 # Default target --	when running 'make' from command line, just build all
-all: dirs $(TEST_PLAYER) $(TEST_TEAM) $(TEST_MATCH)
+all: dirs $(TEST_PLAYER) $(TEST_TEAM) $(TEST_MATCH) $(TEST_LEAGUE)
 
 
 
@@ -68,6 +69,8 @@ $(TEST_TEAM): $(BUILD_DIR)/test_team.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o
 	$(CC) $(CFLAGS) $^ -o $@
 $(TEST_MATCH): $(BUILD_DIR)/test_match.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
 	$(CC) $(CFLAGS) $^ -o $@
+$(TEST_LEAGUE): $(BUILD_DIR)/test_league.o $(BUILD_DIR)/league.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
+	$(CC) $(CFLAGS) $^ -o $@
 
 # Compile test files --	Compile test c files into test object files: 
 # 						'test/test.c => build/test.o'
@@ -76,6 +79,8 @@ $(BUILD_DIR)/test_player.o: $(TEST_DIR)/test_player.c
 $(BUILD_DIR)/test_team.o: $(TEST_DIR)/test_team.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 $(BUILD_DIR)/test_match.o: $(TEST_DIR)/test_match.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(BUILD_DIR)/test_league.o: $(TEST_DIR)/test_league.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 
@@ -93,8 +98,12 @@ test_match: $(TEST_MATCH)
 	@echo "Running Match Test..."
 	@./$(TEST_MATCH)
 
+test_league: $(TEST_LEAGUE)
+	@echo "Running League Test..."
+	@./$(TEST_LEAGUE)
+
 # Run all tests
-tests: test_player test_team test_match
+tests: test_player test_team test_match test_league
 
 # Clean build files
 clean:

@@ -8,16 +8,21 @@
 .
 ├── Makefile
 ├── README.md
-├── modules
-│   ├── match_simulation.c
-│   └── match_simulation.h
 ├── src
+│   ├── league.c
+│   ├── league.h
 │   ├── match.c
 │   ├── match.h
+│   ├── modules
+│   │   ├── match_simulation.c
+│   │   └── match_simulation.h
 │   ├── player.c
 │   ├── player.h
 │   ├── team.c
-│   └── team.h
+│   ├── team.h
+│   └── utils
+│       ├── random_utils.c
+│       └── random_utils.h
 └── tests
     ├── test_match.c
     ├── test_player.c
@@ -44,8 +49,7 @@
     * injuryStatus
 
 * **Methods**: 
-    * createPlayer()
-    * destroyPlayer()
+    * createPlayer() + destroyPlayer()
     * scoreGoal()
     * assist()
     * updateInjuryStatus()
@@ -70,11 +74,8 @@
     * name
 
 * **Methods**: 
-    * createTeam()
-    * destroyTeam()
-    * addPlayer()
-    * removePlayerByNumber()
-    * removePlayerByName()
+    * createTeam() + destroyTeam()
+    * addPlayer() + removePlayerByNumber() + removePlayerByName()
     * getPlayerByNumber()
     * getTeamRating()
     * updateRecord()
@@ -84,12 +85,33 @@
 
 ### League class
 
-* **Attributes**: teams, region, leagueTable
+* **Attributes**: 
+    * name
+    * region/country name
+    * teams
+        * numTeams
+        * maxTeams
+    * schedule (2d array)
+        * matchesPerDay (array)
+        * numMatchDays
+        * currentMatchday
+        * scheduleGenerated (boolean)
+    * leagueTable
+
 * **Methods**: 
-    * setSchedule()
-    * calculatePoints()
-    * simulateMatchDay()
-    * updateStandings()
+    * createLeague() + destroyLeague()
+    * addTeamToLeague() + removeTeamFromLeague()
+    * generateSchedule()
+    * simulateMatchday() + simulateSeason()
+    * updateLeagueTable()
+    * getTeamByName()
+    * getTeamPosition() ~ in league standings
+    * *Printing Information*:
+        * printLeagueTable()
+        * printLeagueTeams()
+        * printMatchdaySchedule()
+        * printLeagueSchedule()
+        * printMatchdayResults()
 
 
 ### Match class
@@ -107,8 +129,7 @@
     * isCompleted
 
 * **Methods**: 
-    * createMatch()
-    * destroyMatch()
+    * createMatch() + destroyMatch()
     * recordGoal()
     * printMatchResult()
     * printMatchReport()
@@ -163,17 +184,3 @@ Takes in teams, rosters & schedules and uses them as input for the program. Also
 
 
 ## Testing
-
-**Player class**: `player.c` + `player.h`
-
-We defined the test file `test_player.c` to test the different function in the **player** class. We run it in the terminal by navigating to the tests folder and running the command:
-
-    gcc -Wall -Wextra -I../src -o test_player test_player.c ../src/player.c
-    ./test_player
-
-**Team class**: `team.c` + `team.h`
-
-We defined the test file `test_team.c` to test the different function in the **team** class. We run it in the terminal by navigating to the tests folder and running the command:
-
-    gcc -Wall -Wextra -I../src -o test_team test_team.c ../src/team.c ../src/player.c
-    ./test_team
