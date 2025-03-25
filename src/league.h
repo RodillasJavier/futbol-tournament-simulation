@@ -21,19 +21,23 @@
 /* FUNCTION PROTOTYPES */
 
 typedef struct {
+    // Name & Region
     char name[MAX_LEAGUE_NAME_LENGTH];      // Name of the league
     char region[MAX_REGION_LENGTH];         // Region/country of the league
 
+    // Teams
     Team** teams;                           // Array of teams in the league
     int numTeams;                           // Number of teams in the league
     int maxTeams;                           // Maximum number of teams allowed
 
+    // Schedule
     Match*** schedule;                      // 2D array: [matchday][match]
     int* matchesPerMatchday;                // Number of matches for each matchday
     int numMatchdays;                       // Number of matchdays in the season
     int currentMatchday;                    // Current matchday (0-based)
     bool scheduleGenerated;                 // Flag if schedule has been generated
 
+    // League table
     int** leagueTable;                      // Sorted indices of teams by rank
 } League;
 
