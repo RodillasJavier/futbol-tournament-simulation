@@ -524,7 +524,35 @@ Team* getTeamByName(const League* league, const char* name)
 }
 
 // Get a team's position in the league table
-int getTeamPosition(const League* league, const Team* team);
+int getTeamPosition(const League* league, const Team* team)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot find a team's position in a NULL league.\n");
+        return -1;
+    } else if (team == NULL) {
+        fprintf(stderr, "Error: Cannot search %s for a NULL team.\n", 
+                league -> name);
+        return -1;
+    } else if (league -> leagueTable == NULL) {
+        fprintf(stderr, "Error: Cannot search a NULL league table.\n");
+        return -1;
+    }
+    
+    // Search for the position of the specified team
+    for (int i = 0; i < league->numTeams; i++)
+    {
+        // If we find a team with the same team index in the table as the specified team...
+        if (league->teams[league->leagueTable[i][0]] == team)
+        {
+            // Position is 1-based
+            return i + 1;
+        }
+    }
+
+    // Team not found
+    return -1;
+}
 
 // Print the league table (standings)
 void printLeagueTable(League* league)
@@ -536,7 +564,7 @@ void printLeagueTable(League* league)
     } else if (league -> leagueTable == NULL) {
         updateLeagueTable(league);
 
-        if (league->leagueTable == NULL) {
+        if (league -> leagueTable == NULL) {
             fprintf(stderr, "Error: Failed to create league table.\n");
             return;
         }
@@ -566,16 +594,120 @@ void printLeagueTable(League* league)
 }
 
 // Print all teams in the league
-void printLeagueTeams(const League* league);
+void printLeagueTeams(const League* league)
+{
+    // NULL check league
+    if (league == NULL)
+    {
+        fprintf(stderr, "Error: Cannot print teams for NULL league.\n");
+        return;
+    }
+
+    // Print header
+    fprintf(stdout, "%s Teams (%s):\n", league -> name, league -> region);
+    fprintf(stdout, "----------------------------------------------------------\n");
+
+    // Print league roster of teams
+    for (int i = 0; i < league -> numTeams; i++)
+    {
+        fprintf(stdout, "%d. %s (%s)\n", 
+                i + 1, league -> teams[i] -> name, league -> teams[i] -> city);
+    }
+}
 
 // Print the complete league schedule
-void printLeagueSchedule(const League* league);
+void printLeagueSchedule(const League* league)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot print schedule for NULL league.\n");
+        return;
+    } if (league -> scheduleGenerated == false) {
+        fprintf(stderr, "Error: Schedule has not been generated yet.\n");
+        return;
+    }
+
+    // Print header
+    fprintf(stdout, "%s Schedule (%s):\n", league -> name, league -> region);
+    fprintf(stdout, "===========================================================\n");
+
+    // Print schedule
+    for (int matchday = 0; matchday < league -> numMatchdays; matchday++)
+    {
+        fprintf(stdout, "Matchday %d:\n", matchday + 1);
+        fprintf(stdout, "----------------------------------------------------------\n");
+
+        for (int i = 0; i < league -> matchesPerMatchday[matchday]; i++)
+        {
+            Match* match = league -> schedule[matchday][i];
+            fprintf(stdout, "%s vs %s\n", 
+                    match -> homeTeam -> name, match -> awayTeam -> name);
+        }
+        fprintf(stdout, "\n");
+    }
+}
 
 // Print the schedule for a specific matchday
-void printMatchdaySchedule(const League* league, int matchday);
+void printMatchdaySchedule(const League* league, int matchday)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot print schedule for NULL league.\n");
+        return;
+    } else if (league -> scheduleGenerated == false) {
+        fprintf(stderr, "Error: Schedule has not been generated yet.\n");
+        return;
+    } else if (matchday < 0 || matchday >= league -> numMatchdays) {
+        fprintf(stderr, "Error: Invalid matchday %d. Valid range is 0-%d.\n", 
+                matchday, league -> numMatchdays - 1);
+        return;
+    }
+
+    // Print header
+    fprintf(stdout, "Matchday %d Schedule:\n", matchday + 1);
+    fprintf(stdout, "----------------------------------------------------------\n");
+
+    // Print matchday schedule
+    for (int i = 0; i < league -> matchesPerMatchday[matchday]; i++)
+    {
+        Match* match = league -> schedule[matchday][i];
+        fprintf(stdout, "%s vs %s\n", 
+                match -> homeTeam -> name, match -> awayTeam -> name);
+    }
+}
 
 // Print the results for a completed matchday
-void printMatchdayResults(const League* league, int matchday);
+void printMatchdayResults(const League* league, int matchday)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot print results for NULL league.\n");
+        return;
+    } else if (league -> scheduleGenerated == false) {
+        fprintf(stderr, "Error: Schedule has not been generated yet.\n");
+        return;
+    } else if (matchday < 0 || matchday >= league -> numMatchdays) {
+        fprintf(stderr, "Error: Invalid matchday %d. Valid range is 0-%d.\n", 
+                matchday, league -> numMatchdays - 1);
+        return;
+    }
+
+    // Print header
+    fprintf(stdout, "Matchday %d Results:\n", matchday + 1);
+    fprintf(stdout, "----------------------------------------------------------\n");
+
+    // Print matchday results
+    for (int i = 0; i < league -> matchesPerMatchday[matchday]; i++)
+    {
+        Match* match = league -> schedule[matchday][i];
+        if (match -> isCompleted == true) {
+            printMatchResult(match);
+        } else {
+            fprintf(stdout, "%s vs %s: Not played yet\n", 
+                    match -> homeTeam -> name, match -> awayTeam -> name);
+        }
+    }
+}
 
 
 
