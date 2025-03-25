@@ -284,6 +284,8 @@ bool generateSchedule(League* league)
     bool firstRoundGenerated = generateRound(league, teamIndices, 0, false);
     if (firstRoundGenerated == false)
     {
+        fprintf(stderr, "Error: Encountered an error generating the first half of the season for %s\n", 
+                league -> name);
         free(teamIndices);
         return false;
     }
@@ -292,6 +294,8 @@ bool generateSchedule(League* league)
     bool secondRoundGenerated = generateRound(league, teamIndices, matchdaysPerRound, true);
     if (secondRoundGenerated == false)
     {
+        fprintf(stderr, "Error: Encountered an error generating the second half of the season for %s\n", 
+            league -> name);
         free(teamIndices);
         return false;
     }
@@ -307,7 +311,62 @@ bool generateSchedule(League* league)
 }
 
 // Simulate the next matchday in the league
-bool simulateMatchday(League* league);
+bool simulateMatchday(League* league)
+{
+    // NULL check league
+    if (league == NULL)
+    {
+        fprintf(stderr, "Error: Cannot simulate matchday for NULL league.\n");
+        return false;
+    }
+
+    // Make sure that a schedule exists in order for us to simulate a matchday
+    if (league -> scheduleGenerated == false)
+    {
+        fprintf(stderr, "Error: Cannot simulate matchday without a generated schedule.\n");
+        return false;
+    }
+
+    // Make sure that the matchday we are on is during the season
+    if (league -> currentMatchday >= league -> numMatchdays)
+    {
+        fprintf(stderr, "Error: Season is already complete. No more matchdays to simulate.\n");
+        return false;
+    }
+
+    fprintf(stdout, "Simulating Matchday %d of %s...\n", 
+            league -> currentMatchday + 1, league -> name);
+
+    // Simulate all matches for the current matchday
+    for (int i = 0; i < league -> matchesPerMatchday[league -> currentMatchday]; i++)
+    {
+        // Get a match from the matchday schedule
+        Match* match = league -> schedule[league -> currentMatchday][i];
+        
+        // Skip already played matches
+        if (match -> isCompleted == true) 
+        {
+            printf("Match between %s and %s was already played.\n", 
+                    match -> homeTeam -> name, match -> awayTeam -> name);
+            continue;
+        }
+        
+        // Simulate the match
+        simulateMatch(match);
+        
+        // Print the result
+        printf("  ");
+        printMatchResult(match);
+    }
+
+    // Advance to next matchday
+    league -> currentMatchday++;
+
+    // Update league table
+    updateLeagueTable(league);
+
+    return true;
+}
 
 // Simulate the entire season
 void simulateSeason(League* league);
