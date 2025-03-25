@@ -499,13 +499,71 @@ void updateLeagueTable(League* league)
 }
 
 // Get a team from the league by name
-Team* getTeamByName(const League* league, const char* name);
+Team* getTeamByName(const League* league, const char* name)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot find a team in a NULL league.\n");
+        return NULL;
+    } else if (name == NULL) {
+        fprintf(stderr, "Error: Cannot find team with a NULL name.\n");
+        return NULL;
+    }
+    
+    // Search the league for teams with the specified name
+    for (int i = 0; i < league -> numTeams; i++)
+    {
+        // If we find teams with matching names
+        if (strcmp(league -> teams[i] -> name, name) == 0)
+        {
+            return league -> teams[i];
+        }
+    }
+
+    return NULL;
+}
 
 // Get a team's position in the league table
 int getTeamPosition(const League* league, const Team* team);
 
 // Print the league table (standings)
-void printLeagueTable(League* league);
+void printLeagueTable(League* league)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot print table for NULL league.\n");
+        return;
+    } else if (league -> leagueTable == NULL) {
+        updateLeagueTable(league);
+
+        if (league->leagueTable == NULL) {
+            fprintf(stderr, "Error: Failed to create league table.\n");
+            return;
+        }
+    }
+
+    // Print table header
+    fprintf(stdout, "%-4s %-20s %-5s %-5s %-5s %-5s %-5s %-5s\n", 
+            "Pos", "Team", "Pts", "P", "W", "D", "L", "GD");
+    fprintf(stdout, "----------------------------------------------------------\n");
+
+    // Print table contents
+    for (int i = 0; i < league -> numTeams; i++)
+    {
+        Team* team = league -> teams[league -> leagueTable[i][0]];
+        int gamesPlayed = team -> wins + team -> draws + team -> losses;
+        
+        fprintf(stdout, "%-4d %-20s %-5d %-5d %-5d %-5d %-5d %-5d\n", 
+                i + 1, 
+                team -> name, 
+                team -> points, 
+                gamesPlayed, 
+                team -> wins, 
+                team -> draws, 
+                team -> losses, 
+                team -> goalDifferential);
+    }
+}
 
 // Print all teams in the league
 void printLeagueTeams(const League* league);
