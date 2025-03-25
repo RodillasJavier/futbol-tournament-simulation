@@ -369,7 +369,75 @@ bool simulateMatchday(League* league)
 }
 
 // Simulate the entire season
-void simulateSeason(League* league);
+void simulateSeason(League* league)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Cannot simulate season for NULL league.\n");
+        return;
+    } else if (league -> scheduleGenerated == false) {
+        fprintf(stderr, "Error: Cannot simulate season without a generated schedule.\n");
+        return;
+    }
+
+    fprintf(stdout, "Simulating entire season for %s...\n",
+            league -> name);
+
+    // Reset current matchday if needed
+    if (league -> currentMatchday > 0)
+    {
+        fprintf(stdout, "Resetting league to start of season for %s.\n", 
+                league -> name);
+        
+        // Reset all teams' stats
+        for (int i = 0; i < league -> numTeams; i++)
+        {
+            Team* team = league -> teams[i];
+            team -> wins = 0;
+            team -> losses = 0;
+            team -> draws = 0;
+            team -> goalsScored = 0;
+            team -> goalsConceded = 0;
+            team -> goalDifferential = 0;
+            team -> points = 0;
+        }
+        
+        // Reset all matches
+        for (int i = 0; i < league->numMatchdays; i++)
+        {
+            for (int j = 0; j < league->matchesPerMatchday[i]; j++)
+            {
+                Match* match = league->schedule[i][j];
+                match -> isCompleted = false;
+                match -> homeScore = 0;
+                match -> awayScore = 0;
+                match -> numScorers = 0;
+                free(match -> scorers);
+                free(match -> scorerTeamIndices);
+                free(match -> scoringMinutes);
+                match -> scorers = NULL;
+                match -> scorerTeamIndices = NULL;
+                match -> scoringMinutes = NULL;
+            }
+        }
+        
+        league -> currentMatchday = 0;
+    }
+
+    // Simulate each matchday
+    while (league -> currentMatchday < league -> numMatchdays)
+    {
+        simulateMatchday(league);
+        
+        // Print current standings after each matchday
+        fprintf(stdout, "\nStandings after Matchday %d:\n", league -> currentMatchday);
+        printLeagueTable(league);
+        fprintf(stdout, "\n");
+    }
+
+    fprintf(stdout, "\nSeason complete! Final standings:\n");
+    printLeagueTable(league);
+}
 
 // Update the league table based on team records
 void updateLeagueTable(League* league);
