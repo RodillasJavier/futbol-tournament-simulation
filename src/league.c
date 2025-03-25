@@ -440,7 +440,63 @@ void simulateSeason(League* league)
 }
 
 // Update the league table based on team records
-void updateLeagueTable(League* league);
+void updateLeagueTable(League* league)
+{
+    // Validate input
+    if (league == NULL) {
+        fprintf(stderr, "Error: Can't update league table for a NULL league.\n");
+        return;
+    } else if (league->numTeams == 0) {
+        fprintf(stderr, "Error: Can't update league table for '%s' with 0 teams.\n", 
+                league -> name);
+        return;
+    }
+    
+
+    // Initialize or clear the league table
+    if (league -> leagueTable == NULL)
+    {
+        // Allocate memory for the leage & NULL check
+        league -> leagueTable = (int**)malloc(league -> numTeams * sizeof(int*));
+        if (league -> leagueTable == NULL)
+        {
+            fprintf(stderr, "Error: Failed to allocate memory for league table.\n");
+            return;
+        }
+        
+        // Fill league table
+        for (int i = 0; i < league -> numTeams; i++)
+        {
+            // Allocate memory for an entry in the league table & NULL check
+            league -> leagueTable[i] = (int*)malloc(2 * sizeof(int));
+            if (league -> leagueTable[i] == NULL)
+            {
+                fprintf(stderr, "Error: Failed to allocate memory for league table entry.\n");
+                // Clean up
+                for (int j = 0; j < i; j++)
+                {
+                    free(league -> leagueTable[j]);
+                }
+                free(league -> leagueTable);
+                league -> leagueTable = NULL;
+                return;
+            }
+
+            league -> leagueTable[i][0] = i;        // Team index
+            league -> leagueTable[i][1] = 0;        // Points
+        }
+    }
+
+    // Update points in the table for each table
+    for (int i = 0; i < league -> numTeams; i++)
+    {
+        Team* team = league -> teams[league -> leagueTable[i][0]];
+        league -> leagueTable[i][1] = team -> points;
+    }
+
+    // Sort the table by points (descending)
+    qsort_r(league -> leagueTable, league -> numTeams, sizeof(int*), compareTeams, league);
+}
 
 // Get a team from the league by name
 Team* getTeamByName(const League* league, const char* name);
@@ -468,7 +524,36 @@ void printMatchdayResults(const League* league, int matchday);
 /* HELER FUNCTIONS */
 
 // Helper function to compare teams for sorting the league table
-int compareTeams(const void* a, const void* b, void* league);
+int compareTeams(const void* a, const void* b, void* leaguePtr)
+{
+    League* league = (League*)leaguePtr;
+    int idxA = *((int*)a);
+    int idxB = *((int*)b);
+    
+    Team* teamA = league -> teams[idxA];
+    Team* teamB = league -> teams[idxB];
+    
+    // Primary sort by points (descending)
+    if (teamA -> points != teamB -> points)
+    {
+        return teamB -> points - teamA -> points;
+    }
+    
+    // Secondary sort by goal difference (descending)
+    if (teamA -> goalDifferential != teamB -> goalDifferential)
+    {
+        return teamB -> goalDifferential - teamA -> goalDifferential;
+    }
+    
+    // Tertiary sort by goals scored (descending)
+    if (teamA -> goalsScored != teamB -> goalsScored)
+    {
+        return teamB -> goalsScored - teamA -> goalsScored;
+    }
+    
+    // If all else is equal, sort alphabetically by name
+    return strcmp(teamA -> name, teamB -> name);
+}
 
 // Helper function to free/clean up the schedule of a league
 void destroySchedule(League* league)
