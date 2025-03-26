@@ -177,10 +177,8 @@ bool drawTournament(Tournament* tournament)
     // Clean up existing bracket if there is one
     void destroyBracket(tournament);
 
-    /*
-        Calculate number of rounds needed
-        For a knockout tournament, we need log2(numTeams) rounds, rounded up 
-    */
+    /*  Calculate number of rounds needed...
+        For a knockout tournament, we need log2(numTeams) rounds, rounded up */
     tournament->numRounds = (int)ceil(log2(tournament->numTeams));
     if (tournament->numRounds > MAX_ROUNDS) {
         tournament->numRounds = MAX_ROUNDS;
