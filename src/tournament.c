@@ -16,6 +16,7 @@
 /* HELPER FUNCTION PROTOTYPES */
 
 bool advanceTeam(Tournament* tournament, int round, int matchIndex);
+void destroyBracket(Tournament* tournament);
 
 
 
@@ -71,29 +72,7 @@ void destroyTournament(Tournament* tournament)
     free(tournament->teams);
 
     // Free bracket if it exists
-    if (tournament->bracket != NULL)
-    {
-        // Look at each round in the tournament
-        for (int i = 0; i < tournament->numRounds; i++)
-        {
-            // If the bracket exists for that round, free it
-            if (tournament->bracket[i] != NULL)
-            {
-                // Free each match in the round
-                for (int j = 0; j < tournament->matchesPerRound[i]; j++)
-                {
-                    destroyMatch(tournament->bracket[i][j]);
-                }
-
-                // Free the ith round of the bracket
-                free(tournament->bracket[i]);
-            }
-        }
-
-        // Free the bracket and the matches per round array
-        free(tournament->bracket);
-        free(tournament->matchesPerRound);
-    }
+    destroyBracket(tournament);
 
     // Free the tournament struct
     free(tournament);
@@ -179,7 +158,141 @@ bool removeTeamFromTournament(Tournament* tournament, const char* teamName)
 }
 
 // Seed/draw teams into the tournament bracket
-bool drawTournament(Tournament* tournament);
+bool drawTournament(Tournament* tournament)
+{
+    // NULL check tournament
+    if (tournament == NULL)
+    {
+        fprintf(stderr, "Error: Cannot draw NULL tournament.\n");
+        return false;
+    }
+    
+    // Need at least 2 teams to create a tournament
+    if (tournament->numTeams < 2)
+    {
+        fprintf(stderr, "Error: Need at least 2 teams to draw a tournament.\n");
+        return false;
+    }
+
+    // Clean up existing bracket if there is one
+    void destroyBracket(tournament);
+
+    /*
+        Calculate number of rounds needed
+        For a knockout tournament, we need log2(numTeams) rounds, rounded up 
+    */
+    tournament->numRounds = (int)ceil(log2(tournament->numTeams));
+    if (tournament->numRounds > MAX_ROUNDS) {
+        tournament->numRounds = MAX_ROUNDS;
+    }
+
+    // Reset tournament state
+    tournament->currentRound = 0;
+    tournament->winner = NULL;
+    tournament->isComplete = false;
+
+    // Allocate memory for the bracket
+    tournament->bracket = (Match***)malloc(tournament->numRounds * sizeof(Match**));
+    if (tournament->bracket == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for tournament bracket.\n");
+        return false;
+    }
+
+    tournament->matchesPerRound = (int*)malloc(tournament->numRounds * sizeof(int));
+    if (tournament->matchesPerRound == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for matchesPerRound.\n");
+        free(tournament->bracket);
+        tournament->bracket = NULL;
+        return false;
+    }
+
+    // Calculate matches per round
+    int teamsInFirstRound = 1 << tournament->numRounds; // 2^numRounds
+    int byeTeams = teamsInFirstRound - tournament->numTeams;
+    
+    // First round may have fewer matches due to byes
+    tournament->matchesPerRound[0] = (teamsInFirstRound - byeTeams) / 2;
+    
+    // Subsequent rounds have half as many matches as the previous round
+    for (int i = 1; i < tournament->numRounds; i++) {
+        tournament->matchesPerRound[i] = tournament->matchesPerRound[i-1] / 2;
+    }
+
+    // Shuffle teams for random draw
+    // Fisher-Yates shuffle algorithm
+    for (int i = tournament->numTeams - 1; i > 0; i--) {
+        int j = rand() % (i + 1);
+        Team* temp = tournament->teams[i];
+        tournament->teams[i] = tournament->teams[j];
+        tournament->teams[j] = temp;
+    }
+
+    // Create first round matches
+    tournament->bracket[0] = (Match**)malloc(tournament->matchesPerRound[0] * sizeof(Match*));
+    if (tournament->bracket[0] == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for first round matches.\n");
+        free(tournament->matchesPerRound);
+        free(tournament->bracket);
+        tournament->bracket = NULL;
+        tournament->matchesPerRound = NULL;
+        return false;
+    }
+
+    // Create matches for first round
+    int teamIndex = 0;
+    for (int i = 0; i < tournament->matchesPerRound[0]; i++) {
+        char dateStr[20];
+        sprintf(dateStr, "R1-M%d", i+1);
+        
+        // Create match
+        Match* match = createMatch(tournament->teams[teamIndex], 
+                                  tournament->teams[teamIndex + 1], 
+                                  dateStr);
+        if (match == NULL) {
+            fprintf(stderr, "Error: Failed to create match for first round.\n");
+            // Clean up
+            for (int j = 0; j < i; j++) {
+                destroyMatch(tournament->bracket[0][j]);
+            }
+            free(tournament->bracket[0]);
+            free(tournament->matchesPerRound);
+            free(tournament->bracket);
+            tournament->bracket = NULL;
+            tournament->matchesPerRound = NULL;
+            return false;
+        }
+        
+        tournament->bracket[0][i] = match;
+        teamIndex += 2;
+    }
+
+    // Allocate memory for subsequent rounds (matches will be created as tournament progresses)
+    for (int round = 1; round < tournament->numRounds; round++) {
+        tournament->bracket[round] = (Match**)malloc(tournament->matchesPerRound[round] * sizeof(Match*));
+        if (tournament->bracket[round] == NULL) {
+            fprintf(stderr, "Error: Failed to allocate memory for round %d matches.\n", round+1);
+            // Clean up
+            for (int i = 0; i < round; i++) {
+                for (int j = 0; j < tournament->matchesPerRound[i]; j++) {
+                    destroyMatch(tournament->bracket[i][j]);
+                }
+                free(tournament->bracket[i]);
+            }
+            free(tournament->matchesPerRound);
+            free(tournament->bracket);
+            tournament->bracket = NULL;
+            tournament->matchesPerRound = NULL;
+            return false;
+        }
+        
+        // Initialize pointers to NULL
+        for (int i = 0; i < tournament->matchesPerRound[round]; i++) {
+            tournament->bracket[round][i] = NULL;
+        }
+    }
+
+    return true;
+}
 
 // Simulate a specific round of the tournament
 bool simulateTournamentRound(Tournament* tournament, int round);
@@ -208,3 +321,32 @@ const char* getRoundName(int round);
 
 // Helper function to determine if a team advances to the next round
 bool advanceTeam(Tournament* tournament, int round, int matchIndex);
+
+// Helper function to free the bracket from memory
+void destroyBracket(Tournament* tournament)
+{
+    // Free bracket if it exists
+    if (tournament->bracket != NULL)
+    {
+        // Look at each round in the tournament
+        for (int i = 0; i < tournament->numRounds; i++)
+        {
+            // If the bracket exists for that round, free it
+            if (tournament->bracket[i] != NULL)
+            {
+                // Free each match in the round
+                for (int j = 0; j < tournament->matchesPerRound[i]; j++)
+                {
+                    destroyMatch(tournament->bracket[i][j]);
+                }
+
+                // Free the ith round of the bracket
+                free(tournament->bracket[i]);
+            }
+        }
+
+        // Free the bracket and the matches per round array
+        free(tournament->bracket);
+        free(tournament->matchesPerRound);
+    }
+}
