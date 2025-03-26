@@ -62,7 +62,42 @@ Tournament* createTournament(const char* name)
 }
 
 // Free all memory allocated for the tournament
-void destroyTournament(Tournament* tournament);
+void destroyTournament(Tournament* tournament)
+{
+    // Null check the tournament
+    if (tournament == NULL) { return; }
+
+    // Free teams array (but not the teams themselves, as they might be used elsewhere)
+    free(tournament->teams);
+
+    // Free bracket if it exists
+    if (tournament->bracket != NULL)
+    {
+        // Look at each round in the tournament
+        for (int i = 0; i < tournament->numRounds; i++)
+        {
+            // If the bracket exists for that round, free it
+            if (tournament->bracket[i] != NULL)
+            {
+                // Free each match in the round
+                for (int j = 0; j < tournament->matchesPerRound[i]; j++)
+                {
+                    destroyMatch(tournament->bracket[i][j]);
+                }
+
+                // Free the ith round of the bracket
+                free(tournament->bracket[i]);
+            }
+        }
+
+        // Free the bracket and the matches per round array
+        free(tournament->bracket);
+        free(tournament->matchesPerRound);
+    }
+
+    // Free the tournament struct
+    free(tournament);
+}
 
 // Add a team to the tournament
 bool addTeamToTournament(Tournament* tournament, Team* team);
