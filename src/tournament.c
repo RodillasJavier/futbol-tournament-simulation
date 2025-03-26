@@ -473,7 +473,24 @@ void simulateEntireTournament(Tournament* tournament)
 }
 
 // Get the winner of the tournament
-Team* getTournamentWinner(const Tournament* tournament);
+Team* getTournamentWinner(const Tournament* tournament)
+{
+    // Null check tournament
+    if (tournament == NULL)
+    {
+        fprintf(stderr, "Error: Cannot get winner of NULL tournament.\n");
+        return NULL;
+    }
+
+    // Make sure the tournament has been completed
+    if (tournament->isComplete == false)
+    {
+        fprintf(stderr, "Error: Tournament is not yet complete.\n");
+        return NULL;
+    }
+
+    return tournament->winner;
+}
 
 // Print the tournament bracket
 void printTournamentBracket(const Tournament* tournament);
