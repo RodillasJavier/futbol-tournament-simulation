@@ -559,7 +559,34 @@ void printTournamentBracket(const Tournament* tournament)
 }
 
 // Print the matches for a specific round
-void printRoundMatches(const Tournament* tournament, int round);
+void printRoundMatches(const Tournament* tournament, int round)
+{
+    // Validate input
+    if (tournament == NULL) {
+        fprintf(stderr, "Error: Cannot print matches for NULL tournament.\n");
+        return;
+    } else if (round < 0 || round >= tournament->numRounds) {
+        fprintf(stderr, "Error: Invalid round %d. Valid range is 0-%d.\n", 
+                round, tournament->numRounds - 1);
+        return;
+    }
+
+    // Print header
+    printf("%s Matches:\n", getRoundName(round));
+    printf("----------------------------------------------------------\n");
+
+    // Print each match in the current round
+    for (int matchIndex = 0; matchIndex < tournament->matchesPerRound[round]; matchIndex++)
+    {
+        // Get match & NULL check
+        Match* match = tournament->bracket[round][matchIndex];
+        if (match != NULL) {
+            printf("%s vs %s\n", match->homeTeam->name, match->awayTeam->name);
+        } else {
+            printf("Match not yet determined\n");
+        }
+    }
+}
 
 // Print the results for a completed round
 void printRoundResults(const Tournament* tournament, int round);
