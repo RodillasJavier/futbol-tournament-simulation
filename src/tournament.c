@@ -641,7 +641,36 @@ void printRoundResults(const Tournament* tournament, int round)
 }
 
 // Get the name of a tournament round
-const char* getRoundName(int round);
+const char* getRoundName(int round)
+{
+    if (round == ROUND_OF_32)
+    {
+        return "Round of 32";
+    }
+    else if (round == ROUND_OF_16)
+    {
+        return "Round of 16";
+    }
+    else if (round == QUARTER_FINAL)
+    {
+        return "Quarter Finals";
+    }
+    else if (round == SEMI_FINAL)
+    {
+        return "Semi Finals";
+    }
+    else if (round == FINAL)
+    {
+        return "Final";
+    }
+    else    // round doesnt equal any of our definitions
+    {
+        return "Unknown Round";
+    }
+    
+    
+    
+}
 
 
 
