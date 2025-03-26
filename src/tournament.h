@@ -15,7 +15,7 @@
 #include <stdbool.h>
 
 #define MAX_TOURNAMENT_NAME_LENGTH 50
-#define MAX_TEAMS_IN_TOURNAMENT 32
+#define MAX_TEAMS_IN_TOURNAMENT 24
 #define MAX_ROUNDS 5  // Enough for 32 teams (2^5 = 32)
 
 typedef enum {

@@ -1,6 +1,9 @@
 /**
  * @author Javier A. Rodillas
  * @details Implementation of the 'tournament' class
+ * 
+ * @cite:   Fisher-Yates shuffle algorithm:
+ *          https://www.geeksforgeeks.org/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/
  */
 
 
@@ -180,24 +183,25 @@ bool drawTournament(Tournament* tournament)
     /*  Calculate number of rounds needed...
         For a knockout tournament, we need log2(numTeams) rounds, rounded up */
     tournament->numRounds = (int)ceil(log2(tournament->numTeams));
-    if (tournament->numRounds > MAX_ROUNDS) {
-        tournament->numRounds = MAX_ROUNDS;
-    }
+    if (tournament->numRounds > MAX_ROUNDS) { tournament->numRounds = MAX_ROUNDS; }
 
     // Reset tournament state
     tournament->currentRound = 0;
     tournament->winner = NULL;
     tournament->isComplete = false;
 
-    // Allocate memory for the bracket
+    // Allocate memory for the bracket & NULL check
     tournament->bracket = (Match***)malloc(tournament->numRounds * sizeof(Match**));
-    if (tournament->bracket == NULL) {
+    if (tournament->bracket == NULL)
+    {
         fprintf(stderr, "Error: Failed to allocate memory for tournament bracket.\n");
         return false;
     }
 
+    // Allocate memory for matchesPerRound and NULL check
     tournament->matchesPerRound = (int*)malloc(tournament->numRounds * sizeof(int));
-    if (tournament->matchesPerRound == NULL) {
+    if (tournament->matchesPerRound == NULL)
+    {
         fprintf(stderr, "Error: Failed to allocate memory for matchesPerRound.\n");
         free(tournament->bracket);
         tournament->bracket = NULL;
@@ -212,22 +216,24 @@ bool drawTournament(Tournament* tournament)
     tournament->matchesPerRound[0] = (teamsInFirstRound - byeTeams) / 2;
     
     // Subsequent rounds have half as many matches as the previous round
-    for (int i = 1; i < tournament->numRounds; i++) {
-        tournament->matchesPerRound[i] = tournament->matchesPerRound[i-1] / 2;
+    for (int i = 1; i < tournament->numRounds; i++)
+    {
+        tournament->matchesPerRound[i] = tournament->matchesPerRound[i - 1] / 2;
     }
 
-    // Shuffle teams for random draw
-    // Fisher-Yates shuffle algorithm
-    for (int i = tournament->numTeams - 1; i > 0; i--) {
+    // Shuffle teams for random draw Fisher-Yates shuffle algorithm
+    for (int i = tournament->numTeams - 1; i > 0; i--)
+    {
         int j = rand() % (i + 1);
         Team* temp = tournament->teams[i];
         tournament->teams[i] = tournament->teams[j];
         tournament->teams[j] = temp;
     }
 
-    // Create first round matches
+    // Allocate memory for the first round matches & NULL check
     tournament->bracket[0] = (Match**)malloc(tournament->matchesPerRound[0] * sizeof(Match*));
-    if (tournament->bracket[0] == NULL) {
+    if (tournament->bracket[0] == NULL)
+    {
         fprintf(stderr, "Error: Failed to allocate memory for first round matches.\n");
         free(tournament->matchesPerRound);
         free(tournament->bracket);
@@ -238,18 +244,21 @@ bool drawTournament(Tournament* tournament)
 
     // Create matches for first round
     int teamIndex = 0;
-    for (int i = 0; i < tournament->matchesPerRound[0]; i++) {
+    for (int i = 0; i < tournament->matchesPerRound[0]; i++)
+    {
         char dateStr[20];
-        sprintf(dateStr, "R1-M%d", i+1);
+        sprintf(dateStr, "R1-M%d", i + 1);
         
         // Create match
-        Match* match = createMatch(tournament->teams[teamIndex], 
-                                  tournament->teams[teamIndex + 1], 
-                                  dateStr);
-        if (match == NULL) {
+        Match* match =  createMatch(tournament->teams[teamIndex], 
+                                    tournament->teams[teamIndex + 1], 
+                                    dateStr);
+        if (match == NULL)
+        {
             fprintf(stderr, "Error: Failed to create match for first round.\n");
             // Clean up
-            for (int j = 0; j < i; j++) {
+            for (int j = 0; j < i; j++)
+            {
                 destroyMatch(tournament->bracket[0][j]);
             }
             free(tournament->bracket[0]);
@@ -264,18 +273,26 @@ bool drawTournament(Tournament* tournament)
         teamIndex += 2;
     }
 
-    // Allocate memory for subsequent rounds (matches will be created as tournament progresses)
-    for (int round = 1; round < tournament->numRounds; round++) {
+    // Allocate memory for subsequent rounds & NULL check
+    for (int round = 1; round < tournament->numRounds; round++)
+    {
         tournament->bracket[round] = (Match**)malloc(tournament->matchesPerRound[round] * sizeof(Match*));
-        if (tournament->bracket[round] == NULL) {
+        if (tournament->bracket[round] == NULL)
+        {
             fprintf(stderr, "Error: Failed to allocate memory for round %d matches.\n", round+1);
-            // Clean up
-            for (int i = 0; i < round; i++) {
-                for (int j = 0; j < tournament->matchesPerRound[i]; j++) {
+            // Look at each round in the tournament up to the current one
+            for (int i = 0; i < round; i++)
+            {
+                // Free each match in the round
+                for (int j = 0; j < tournament->matchesPerRound[i]; j++)
+                {
                     destroyMatch(tournament->bracket[i][j]);
                 }
+                // Free the ith round of the bracket
                 free(tournament->bracket[i]);
             }
+
+            // Free the bracket and the matches per round array
             free(tournament->matchesPerRound);
             free(tournament->bracket);
             tournament->bracket = NULL;
@@ -284,7 +301,8 @@ bool drawTournament(Tournament* tournament)
         }
         
         // Initialize pointers to NULL
-        for (int i = 0; i < tournament->matchesPerRound[round]; i++) {
+        for (int i = 0; i < tournament->matchesPerRound[round]; i++)
+        {
             tournament->bracket[round][i] = NULL;
         }
     }
