@@ -475,7 +475,7 @@ void simulateEntireTournament(Tournament* tournament)
 // Get the winner of the tournament
 Team* getTournamentWinner(const Tournament* tournament)
 {
-    // Null check tournament
+    // NULL check tournament
     if (tournament == NULL)
     {
         fprintf(stderr, "Error: Cannot get winner of NULL tournament.\n");
@@ -493,7 +493,70 @@ Team* getTournamentWinner(const Tournament* tournament)
 }
 
 // Print the tournament bracket
-void printTournamentBracket(const Tournament* tournament);
+void printTournamentBracket(const Tournament* tournament)
+{
+    // NULL check tournament
+    if (tournament == NULL)
+    {
+        fprintf(stderr, "Error: Cannot print bracket for NULL tournament.\n");
+        return;
+    }
+
+    // Print header for bracket
+    fprintf(stdout, "%s Tournament Bracket:\n", tournament->name);
+    fprintf(stdout, "===========================================================\n");
+
+    // Print each round
+    for (int round = 0; round < tournament->numRounds; round++)
+    {
+        // Print header for round
+        fprintf(stdout, "%s:\n", getRoundName(round));
+        fprintf(stdout, "----------------------------------------------------------\n");
+
+        // Print each match in the round
+        for (int i = 0; i < tournament->matchesPerRound[round]; i++)
+        {
+            // Get the ith match in the round & NULL check
+            Match* match = tournament->bracket[round][i];
+            if (match == NULL)
+            {
+                fprintf(stdout, "Match not yet determined\n");
+                continue;
+            }
+
+            // If the match hasn't been played yet
+            if (match->isCompleted == false)
+            {
+                fprintf(stdout, "%s vs %s: Not played yet\n", 
+                    match->homeTeam->name, match->awayTeam->name);
+                continue;
+            }
+
+            // Print scoreboard
+            fprintf(stdout, "%s %d - %d %s", 
+                    match->homeTeam->name, match->homeScore, 
+                    match->awayScore, match->awayTeam->name);
+        
+            // Indicate winner of the match
+            if (match->homeScore > match->awayScore) {
+                fprintf(stdout, " (Winner: %s)\n", match->homeTeam->name);
+            } else if (match->homeScore < match->awayScore) {
+                fprintf(stdout, " (Winner: %s)\n", match->awayTeam->name);
+            } else {
+                fprintf(stdout, " (Draw)\n");
+            }
+        }
+
+        fprintf(stdout, "\n");
+    }
+
+    // Print winner if we know yet
+    if (tournament->isComplete && tournament->winner != NULL)
+    {
+        fprintf(stdout, "Tournament Winner: %s\n", 
+                tournament->winner->name);
+    }
+}
 
 // Print the matches for a specific round
 void printRoundMatches(const Tournament* tournament, int round);
