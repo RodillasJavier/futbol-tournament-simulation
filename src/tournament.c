@@ -345,7 +345,7 @@ bool simulateTournamentRound(Tournament* tournament, int round)
         simulateMatch(match);
         
         // Print the result
-        printf("  ");
+        fprintf(stdout, "  ");
         printMatchResult(match);
     }
 
@@ -444,7 +444,33 @@ bool simulateTournamentRound(Tournament* tournament, int round)
 }
 
 // Simulate the entire tournament from current round to final
-void simulateEntireTournament(Tournament* tournament);
+void simulateEntireTournament(Tournament* tournament)
+{
+    // NULL check tournament
+    if (tournament == NULL)
+    {
+        fprintf(stderr, "Error: Cannot simulate NULL tournament.\n");
+        return;
+    }
+
+    fprintf(stdout, "Simulating entire %s tournament...\n", tournament->name);
+
+    // Simulate each round until tournament is complete
+    while (tournament->isComplete == false && 
+            tournament->currentRound < tournament->numRounds)
+    {
+        simulateTournamentRound(tournament, tournament->currentRound);
+        
+        // Print results of the round
+        fprintf(stdout, "\nResults of %s:\n", getRoundName(tournament->currentRound - 1));
+        printRoundResults(tournament, tournament->currentRound - 1);
+        fprintf(stdout, "\n");
+    }
+
+    // Print final tournament bracket
+    fprintf(stdout, "\nFinal Tournament Bracket:\n");
+    printTournamentBracket(tournament);
+}
 
 // Get the winner of the tournament
 Team* getTournamentWinner(const Tournament* tournament);
