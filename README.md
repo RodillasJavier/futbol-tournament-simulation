@@ -8,11 +8,6 @@
 .
 ├── Makefile
 ├── README.md
-├── bin
-│   ├── test_league
-│   ├── test_match
-│   ├── test_player
-│   └── test_team
 ├── src
 │   ├── league.c
 │   ├── league.h
@@ -34,7 +29,8 @@
     ├── test_league.c
     ├── test_match.c
     ├── test_player.c
-    └── test_team.c
+    ├── test_team.c
+    └── test_tournament.c
 ```
 
 
