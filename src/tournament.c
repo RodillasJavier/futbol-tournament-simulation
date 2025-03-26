@@ -677,7 +677,80 @@ const char* getRoundName(int round)
 /* HELPER FUNCTIONS */
 
 // Helper function to determine if a team advances to the next round
-bool advanceTeam(Tournament* tournament, int round, int matchIndex);
+bool advanceTeam(Tournament* tournament, int round, int matchIndex)
+{
+    // Validate input
+    if (tournament == NULL) {
+        fprintf(stderr, "Error: Cannot advance team in NULL tournament.\n");
+        return false;
+    } if (round < 0 || round >= tournament->numRounds - 1) {
+        fprintf(stderr, "Error: Invalid round %d. Valid range for advancement is 0-%d.\n", 
+                round, tournament->numRounds - 2);
+        return false;
+    } if (matchIndex < 0 || matchIndex >= tournament->matchesPerRound[round]) {
+        fprintf(stderr, "Error: Invalid match index %d for round %d.\n", 
+                matchIndex, round);
+        return false;
+    }
+
+    // Get match & NULL check
+    Match* match = tournament->bracket[round][matchIndex];
+    if (match == NULL)
+    {
+        fprintf(stderr, "Error: Match does not exist at round %d, index %d.\n", 
+                round, matchIndex);
+        return false;
+    }
+
+    // Make sure the match has been played
+    if (match->isCompleted == false)
+    {
+        fprintf(stderr, "Error: Cannot advance team from a match that hasn't been played.\n");
+        return false;
+    }
+
+    // Determine the winner
+    Team* winner = NULL;
+    if (match->homeScore > match->awayScore) {
+        winner = match->homeTeam;
+    } else if (match->homeScore < match->awayScore) {
+        winner = match->awayTeam;
+    } else {
+        /* @note For simplicity, let's say the home team advances for now during a draw */
+        winner = match->homeTeam;
+    }
+
+    // Calculate which match in the next round this team should go to
+    int nextRoundMatchIndex = matchIndex / 2;
+
+    // If the next round match doesn't exist yet, create it
+    if (tournament->bracket[round + 1][nextRoundMatchIndex] == NULL)
+    {
+        // Get the round & match information
+        char dateStr[20];
+        sprintf(dateStr, "R%d-M%d", round+2, nextRoundMatchIndex+1);
+        
+        // Create match with winner as home team (second winner will be away team)
+        Match* nextMatch = createMatch(winner, NULL, dateStr);
+        if (nextMatch == NULL)
+        {
+            fprintf(stderr, "Error: Failed to create match for round %d.\n", round+2);
+            return false;
+        }
+        
+        tournament->bracket[round + 1][nextRoundMatchIndex] = nextMatch;
+    } else {
+        // If the match already exists, add this winner as the away team
+        Match* nextMatch = tournament->bracket[round + 1][nextRoundMatchIndex];
+        if (nextMatch->homeTeam == NULL) {
+            nextMatch->homeTeam = winner;
+        } else {
+            nextMatch->awayTeam = winner;
+        }
+    }
+
+    return true;
+}
 
 // Helper function to free the bracket from memory
 void destroyBracket(Tournament* tournament)
