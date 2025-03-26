@@ -8,6 +8,11 @@
 .
 ├── Makefile
 ├── README.md
+├── bin
+│   ├── test_league
+│   ├── test_match
+│   ├── test_player
+│   └── test_team
 ├── src
 │   ├── league.c
 │   ├── league.h
@@ -20,6 +25,8 @@
 │   ├── player.h
 │   ├── team.c
 │   ├── team.h
+│   ├── tournament.c
+│   ├── tournament.h
 │   └── utils
 │       ├── random_utils.c
 │       └── random_utils.h
