@@ -311,7 +311,137 @@ bool drawTournament(Tournament* tournament)
 }
 
 // Simulate a specific round of the tournament
-bool simulateTournamentRound(Tournament* tournament, int round);
+bool simulateTournamentRound(Tournament* tournament, int round)
+{
+    // Validate input
+    if (tournament == NULL) {
+        fprintf(stderr, "Error: Cannot simulate round for NULL tournament.\n");
+        return false;
+    } else if (round < 0 || round >= tournament->numRounds) {
+        fprintf(stderr, "Error: Invalid round %d. Valid range is 0-%d.\n", 
+                round, tournament->numRounds - 1);
+        return false;
+    } else if (round != tournament->currentRound) {
+        fprintf(stderr, "Error: Can only simulate current round (%d).\n", tournament->currentRound);
+        return false;
+    }
+
+    fprintf(stdout, "Simulating %s of %s...\n", getRoundName(round), tournament->name);
+
+    // Simulate all matches for the current round
+    for (int i = 0; i < tournament->matchesPerRound[round]; i++)
+    {
+        Match* match = tournament->bracket[round][i];
+        
+        // Skip already played matches
+        if (match->isCompleted)
+        {
+            fprintf(stdout, "Match between %s and %s was already played.\n", 
+                    match->homeTeam->name, match->awayTeam->name);
+            continue;
+        }
+        
+        // Simulate the match
+        simulateMatch(match);
+        
+        // Print the result
+        printf("  ");
+        printMatchResult(match);
+    }
+
+    // If this is not the final round, create matches for the next round
+    if (round < tournament->numRounds - 1)
+    {
+        // For each new match in the next round of the bracket
+        for (int i = 0; i < tournament->matchesPerRound[round + 1]; i++)
+        {
+            // Get the winners of the two previous matches
+            Team* team1 = NULL;
+            Team* team2 = NULL;
+            
+            // First match index
+            int match1Index = i * 2;
+            if (match1Index < tournament->matchesPerRound[round])
+            {
+                // Get match 1
+                Match* match1 = tournament->bracket[round][match1Index];
+
+                // If the home team won
+                if (getMatchWinner(match1) == 0){
+                    team1 = match1->homeTeam;
+                } 
+                // Away team won
+                else {
+                    team1 = match1->awayTeam;
+                }
+            }
+            
+            // Second match index
+            int match2Index = i * 2 + 1;
+            if (match2Index < tournament->matchesPerRound[round])
+            {
+                // Get match 2
+                Match* match2 = tournament->bracket[round][match2Index];
+
+                // If the home team won
+                if (getMatchWinner(match2) == 0) {
+                    team2 = match2->homeTeam;
+                } 
+                // Away team won
+                else {
+                    team2 = match2->awayTeam;
+                }
+            }
+            
+            // Create the next round match if both teams are determined
+            if (team1 != NULL && team2 != NULL)
+            {
+                // Store the match info/date
+                char dateStr[20];
+                sprintf(dateStr, "R%d-M%d", round+2, i+1);
+                
+                // Create match & NULL check
+                Match* match = createMatch(team1, team2, dateStr);
+                if (match == NULL)
+                {
+                    fprintf(stderr, "Error: Failed to create match for round %d.\n", round+2);
+                    return false;
+                }
+                
+                // Set the match in the next round of the bracket
+                tournament->bracket[round+1][i] = match;
+            }
+        }
+    } 
+    
+    // If this is the final rounf
+    else 
+    {
+        // Determine the winner
+        Match* finalMatch = tournament->bracket[round][0];
+
+        // If the home team won the final
+        if (getMatchWinner(finalMatch) == 0) {
+            tournament->winner = finalMatch->homeTeam;
+        } 
+        // The away team won the final
+        else {
+            tournament->winner = finalMatch->awayTeam;
+        }
+
+        // Mark the tournament as officially completed
+        tournament->isComplete = true;
+        
+        // Print results of the tournament
+        fprintf(stdout, "\n%s tournament Complete! %s is the winner!\n", 
+            tournament->name, tournament->winner->name);
+    }
+
+    // Advance to next round
+    tournament->currentRound++;
+
+    return true;
+}
 
 // Simulate the entire tournament from current round to final
 void simulateEntireTournament(Tournament* tournament);
