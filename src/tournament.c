@@ -13,6 +13,8 @@
 #include "tournament.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+#include <math.h>
 
 
 
@@ -178,7 +180,7 @@ bool drawTournament(Tournament* tournament)
     }
 
     // Clean up existing bracket if there is one
-    void destroyBracket(tournament);
+    destroyBracket(tournament);
 
     /*  Calculate number of rounds needed...
         For a knockout tournament, we need log2(numTeams) rounds, rounded up */
@@ -208,12 +210,8 @@ bool drawTournament(Tournament* tournament)
         return false;
     }
 
-    // Calculate matches per round
-    int teamsInFirstRound = 1 << tournament->numRounds; // 2^numRounds
-    int byeTeams = teamsInFirstRound - tournament->numTeams;
-    
     // First round may have fewer matches due to byes
-    tournament->matchesPerRound[0] = (teamsInFirstRound - byeTeams) / 2;
+    tournament->matchesPerRound[0] = tournament->numTeams / 2;
     
     // Subsequent rounds have half as many matches as the previous round
     for (int i = 1; i < tournament->numRounds; i++)
@@ -326,7 +324,7 @@ bool simulateTournamentRound(Tournament* tournament, int round)
         return false;
     }
 
-    fprintf(stdout, "Simulating %s of %s...\n", getRoundName(round), tournament->name);
+    fprintf(stdout, "Simulating %s of %s...\n", getRoundName(round, tournament->numTeams), tournament->name);
 
     // Simulate all matches for the current round
     for (int i = 0; i < tournament->matchesPerRound[round]; i++)
@@ -462,7 +460,7 @@ void simulateEntireTournament(Tournament* tournament)
         simulateTournamentRound(tournament, tournament->currentRound);
         
         // Print results of the round
-        fprintf(stdout, "\nResults of %s:\n", getRoundName(tournament->currentRound - 1));
+        fprintf(stdout, "\nResults of %s:\n", getRoundName(tournament->currentRound - 1, tournament->numTeams));
         printRoundResults(tournament, tournament->currentRound - 1);
         fprintf(stdout, "\n");
     }
@@ -510,7 +508,7 @@ void printTournamentBracket(const Tournament* tournament)
     for (int round = 0; round < tournament->numRounds; round++)
     {
         // Print header for round
-        fprintf(stdout, "%s:\n", getRoundName(round));
+        fprintf(stdout, "%s:\n", getRoundName(round, tournament->numTeams));
         fprintf(stdout, "----------------------------------------------------------\n");
 
         // Print each match in the round
@@ -572,7 +570,7 @@ void printRoundMatches(const Tournament* tournament, int round)
     }
 
     // Print header
-    fprintf(stdout, "%s Matches:\n", getRoundName(round));
+    fprintf(stdout, "%s Matches:\n", getRoundName(round, tournament->numTeams));
     fprintf(stdout, "----------------------------------------------------------\n");
 
     // Print each match in the current round
@@ -602,7 +600,7 @@ void printRoundResults(const Tournament* tournament, int round)
     }
 
     // Print header
-    fprintf(stdout, "%s Results:\n", getRoundName(round));
+    fprintf(stdout, "%s Results:\n", getRoundName(round, tournament->numTeams));
     fprintf(stdout, "----------------------------------------------------------\n");
 
     // Print each match result in the current round
@@ -641,25 +639,28 @@ void printRoundResults(const Tournament* tournament, int round)
 }
 
 // Get the name of a tournament round
-const char* getRoundName(int round)
+const char* getRoundName(int round, int totalTeams)
 {
-    if (round == ROUND_OF_32)
+    int maxRounds = (int)ceil(log2(totalTeams)); // Total number of rounds
+    int teamsInRound = 1 << (maxRounds - round); // Teams in the current round
+
+    if (teamsInRound == 32)
     {
         return "Round of 32";
     }
-    else if (round == ROUND_OF_16)
+    else if (teamsInRound == 16)
     {
         return "Round of 16";
     }
-    else if (round == QUARTER_FINAL)
+    else if (teamsInRound == 8)
     {
         return "Quarter Finals";
     }
-    else if (round == SEMI_FINAL)
+    else if (teamsInRound == 4)
     {
         return "Semi Finals";
     }
-    else if (round == FINAL)
+    else if (teamsInRound == 2)
     {
         return "Final";
     }

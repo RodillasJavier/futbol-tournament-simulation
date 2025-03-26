@@ -12,19 +12,12 @@
 
 #include "team.h"
 #include "match.h"
+#include "modules/match_simulation.h"
 #include <stdbool.h>
 
 #define MAX_TOURNAMENT_NAME_LENGTH 50
-#define MAX_TEAMS_IN_TOURNAMENT 24
+#define MAX_TEAMS_IN_TOURNAMENT 32
 #define MAX_ROUNDS 5  // Enough for 32 teams (2^5 = 32)
-
-typedef enum {
-    ROUND_OF_32 = 0,
-    ROUND_OF_16 = 1,
-    QUARTER_FINAL = 2,
-    SEMI_FINAL = 3,
-    FINAL = 4
-} TournamentRound;
 
 typedef struct {
     // Name
@@ -147,9 +140,10 @@ void printRoundResults(const Tournament* tournament, int round);
  * Get the name of a tournament round
  * 
  * @param round that we want to get the name of
+ * @param totalTeams in the round being played
  * 
  * @return pointer to the name of the round
  */
-const char* getRoundName(int round);
+const char* getRoundName(int round, int totalTeams);
 
 #endif // TOURNAMENT_H

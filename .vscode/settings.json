@@ -12,6 +12,8 @@
         "player.h": "c",
         "league": "cpp",
         "random_utils.h": "c",
-        "league.h": "c"
+        "league.h": "c",
+        "tournament.h": "c",
+        "stdio.h": "c"
     }
 }
