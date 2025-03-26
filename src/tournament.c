@@ -100,10 +100,83 @@ void destroyTournament(Tournament* tournament)
 }
 
 // Add a team to the tournament
-bool addTeamToTournament(Tournament* tournament, Team* team);
+bool addTeamToTournament(Tournament* tournament, Team* team)
+{
+    // Validate input
+    if (tournament == NULL) {
+        fprintf(stderr, "Error: Cannot add team to NULL tournament.\n");
+        return false;
+    } else if (team == NULL) {
+        fprintf(stderr, "Error: Cannot add NULL team to tournament.\n");
+        return false;
+    }
+
+    // Check if tournament is full
+    if (tournament->numTeams >= MAX_TEAMS_IN_TOURNAMENT)
+    {
+        fprintf(stderr, "Error: Tournament is already at maximum capacity (%d teams).\n", 
+                MAX_TEAMS_IN_TOURNAMENT);
+        return false;
+    }
+
+    // Check if team already exists in the tournament
+    for (int i = 0; i < tournament->numTeams; i++)
+    {
+        if (strcmp(tournament->teams[i]->name, team->name) == 0)
+        {
+            fprintf(stderr, "Error: Team '%s' is already in the tournament.\n", team->name);
+            return false;
+        }
+    }
+
+    // Add team to the tournament
+    tournament->teams[tournament->numTeams] = team;
+    tournament->numTeams++;
+
+    return true;
+}
 
 // Remove a team from the tournament by name
-bool removeTeamFromTournament(Tournament* tournament, const char* teamName);
+bool removeTeamFromTournament(Tournament* tournament, const char* teamName)
+{
+    // Validate input
+    if (tournament == NULL) {
+        fprintf(stderr, "Error: Cannot remove team from NULL tournament.\n");
+        return false;
+    } else if (teamName == NULL) {
+        fprintf(stderr, "Error: Cannot remove team with NULL name.\n");
+        return false;
+    }
+
+    // Find the team
+    int teamIndex = -1;
+    for (int i = 0; i < tournament->numTeams; i++)
+    {
+        if (strcmp(tournament->teams[i]->name, teamName) == 0)
+        {
+            teamIndex = i;
+            break;
+        }
+    }
+
+    // If we couldn't find the team
+    if (teamIndex == -1)
+    {
+        fprintf(stderr, "Error: Team '%s' not found in the tournament.\n", teamName);
+        return false;
+    }
+
+    // Shift teams left to fill the gap
+    for (int i = teamIndex; i < tournament->numTeams - 1; i++)
+    {
+        tournament->teams[i] = tournament->teams[i + 1];
+    }
+
+    // Decrement our counter of the number of teams left in the tournament
+    tournament->numTeams--;
+
+    return true;
+}
 
 // Seed/draw teams into the tournament bracket
 bool drawTournament(Tournament* tournament);
