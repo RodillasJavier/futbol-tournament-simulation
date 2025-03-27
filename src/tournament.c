@@ -22,6 +22,7 @@
 
 bool advanceTeam(Tournament* tournament, int round, int matchIndex);
 void destroyBracket(Tournament* tournament);
+bool isPowerOfTwo(int n);
 
 
 
@@ -165,19 +166,20 @@ bool removeTeamFromTournament(Tournament* tournament, const char* teamName)
 // Seed/draw teams into the tournament bracket
 bool drawTournament(Tournament* tournament)
 {
-    // NULL check tournament
-    if (tournament == NULL)
-    {
+    // Validate input
+    if (tournament == NULL) {
         fprintf(stderr, "Error: Cannot draw NULL tournament.\n");
+        return false;
+    } else if (tournament->numTeams < 2) {
+        // Need at least 2 teams to create a tournament
+        fprintf(stderr, "Error: Need at least 2 teams to draw a tournament.\n");
+        return false;
+    } else if (isPowerOfTwo(tournament->numTeams) == false) {
+        fprintf(stderr, "Error: Number of teams must be a power of 2 (got %d).\n", 
+                tournament->numTeams);
         return false;
     }
     
-    // Need at least 2 teams to create a tournament
-    if (tournament->numTeams < 2)
-    {
-        fprintf(stderr, "Error: Need at least 2 teams to draw a tournament.\n");
-        return false;
-    }
 
     // Clean up existing bracket if there is one
     destroyBracket(tournament);
@@ -780,4 +782,10 @@ void destroyBracket(Tournament* tournament)
         free(tournament->bracket);
         free(tournament->matchesPerRound);
     }
+}
+
+// Function to detect if a number is a power of two
+bool isPowerOfTwo(int n)
+{
+    return n > 0 && (n & (n - 1)) == 0;
 }

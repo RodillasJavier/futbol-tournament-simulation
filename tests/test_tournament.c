@@ -43,14 +43,22 @@ int main() {
     
     // Create and add teams to the tournament
     printf("Adding teams to the tournament...\n");
-    addTeamToTournament(tournament, createTestTeam("Barcelona", "Barcelona", "Xavi", "Camp Nou"));
-    addTeamToTournament(tournament, createTestTeam("Real Madrid", "Madrid", "Ancelotti", "Santiago Bernabeu"));
-    addTeamToTournament(tournament, createTestTeam("Bayern Munich", "Munich", "Tuchel", "Allianz Arena"));
-    addTeamToTournament(tournament, createTestTeam("Manchester City", "Manchester", "Guardiola", "Etihad Stadium"));
-    addTeamToTournament(tournament, createTestTeam("Liverpool", "Liverpool", "Klopp", "Anfield"));
+    addTeamToTournament(tournament, createTestTeam("Liverpool", "Liverpool", "Arne Slot", "Anfield"));
+    addTeamToTournament(tournament, createTestTeam("F.C. Barcelona", "Barcelona", "Hansi Flick", "Camp Nou"));
+    addTeamToTournament(tournament, createTestTeam("Arsenal", "London", "Mikel Arteta", "Emirates Stadium"));
+    addTeamToTournament(tournament, createTestTeam("Inter Milan", "Milan", "Simone Inzaghi", "San Siro"));
+    addTeamToTournament(tournament, createTestTeam("Atleti", "Madrid", "Diego Simeone", "Wanda Metropolitano"));
+    addTeamToTournament(tournament, createTestTeam("Leverkusen", "Leverkusen", "Xabi Alonso", "BayArena"));
+    addTeamToTournament(tournament, createTestTeam("Lille", "Lille", "Paulo Fonseca", "Stade Pierre-Mauroy"));
+    addTeamToTournament(tournament, createTestTeam("Aston Villa", "Birmingham", "Unai Emery", "Villa Park"));
+    addTeamToTournament(tournament, createTestTeam("Club Brugge", "Bruges", "Ronny Deila", "Jan Breydel Stadium"));
+    addTeamToTournament(tournament, createTestTeam("BVB", "Dortmund", "Edin Terzić", "Signal Iduna Park"));
+    addTeamToTournament(tournament, createTestTeam("Real Madrid C.F.", "Madrid", "Carlo Ancelotti", "Santiago Bernabéu"));
+    addTeamToTournament(tournament, createTestTeam("Bayern Munchen", "Munich", "Thomas Tuchel", "Allianz Arena"));
+    addTeamToTournament(tournament, createTestTeam("Feyenoord", "Rotterdam", "Arne Slot", "De Kuip"));
+    addTeamToTournament(tournament, createTestTeam("PSV", "Eindhoven", "Peter Bosz", "Philips Stadion"));
     addTeamToTournament(tournament, createTestTeam("PSG", "Paris", "Luis Enrique", "Parc des Princes"));
-    addTeamToTournament(tournament, createTestTeam("Juventus", "Turin", "Allegri", "Allianz Stadium"));
-    addTeamToTournament(tournament, createTestTeam("Chelsea", "London", "Pochettino", "Stamford Bridge"));
+    addTeamToTournament(tournament, createTestTeam("Benfica", "Lisbon", "Roger Schmidt", "Estádio da Luz"));
     
     // Draw the tournament
     printf("\nDrawing tournament bracket...\n");
