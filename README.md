@@ -11,6 +11,7 @@
 ├── src
 │   ├── league.c
 │   ├── league.h
+│   ├── main.c
 │   ├── match.c
 │   ├── match.h
 │   ├── modules
@@ -143,17 +144,34 @@
 
 ### Tournament class
 
-* **Attributes**: teams, bracket, rounds
+* **Attributes**: 
+    * name
+    * teams
+        * numTeams
+    * bracket
+        * numRounds
+        * matchesPerRound
+        * currentRound
+    * winner
+    * isComplete
+
 * **Methods**: 
-    * drawTeams()
-    * simulateKnockoutStage()
-    * simulateFinal()
+    * createTournament() + destroyTournament()
+    * addTeamToTournament() + removeTeamFromTournament()
+    * drawTournament()
+    * simulateTournamentRound()
+    * simulateEntireTournament()
+    * getTournamentWinner()
+    * printTournamentBracket()
+    * printRoundMatches()
+    * printRoundResults()
+    * getRoundName()
 
 
 
-## Module Breakdown
+## Module + Utils Breakdown
 
-### Match Simulation Module: 
+### Match Simulation: 
 
 Logic for simulating match outcomes. *Idea*: Weighted probabilities based on player ratings.
 
@@ -165,25 +183,14 @@ Logic for simulating match outcomes. *Idea*: Weighted probabilities based on pla
     * simulateInjuries()
     * simulateMatchMinutes()
 
-### Tournament Simulation Module: 
+### Random Utils: 
 
-Logic for simulating tournament legs & final once the knockout stages begin. 
+Some utility functions for generating random numbers & probabilities that we needed in our simulations.
 
-### Statistics Module: 
-
-Tracks goals, assists, scores, etc. for matches as well as for the entire season. 
-
-### Schedule Generator Module: 
-
-Generates input for league play and knockout rounds based on drawing and league schedule structure: 
-
-* Each team plays the other exactly once in the first half of the season.
-* Each team plays each other in the exact same order in the second half of the season, but with home/away status reversed. 
-* We'll generate the first half schedule at random for this project. 
-
-### File I/O module: 
-
-Takes in teams, rosters & schedules and uses them as input for the program. Also in charge of output in the terminal? Main method here?
+* **Methods**: 
+    * initRandom()
+    * randomProbability()
+    * randomInt()
 
 
 
