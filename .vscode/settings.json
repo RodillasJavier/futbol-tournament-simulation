@@ -14,6 +14,8 @@
         "random_utils.h": "c",
         "league.h": "c",
         "tournament.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "bitset": "c",
+        "unordered_map": "c"
     }
 }

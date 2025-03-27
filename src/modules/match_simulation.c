@@ -304,9 +304,11 @@ void simulateInjuries(Match* match)
         if (randomProbability() < 0.025 && player -> injuryStatus == false)
         {
             updateInjuryStatus(player, true);
-            fprintf(stdout, 
-                    "INJURY: %s (%s) was injured during the match!\n", 
-                    player -> name, homeTeam -> name);
+            
+            // // Print injury announcement
+            // fprintf(stdout, 
+            //         "INJURY: %s (%s) was injured during the match!\n", 
+            //         player -> name, homeTeam -> name);
         }
     }
 
@@ -320,9 +322,11 @@ void simulateInjuries(Match* match)
         if (randomProbability() < 0.025 && player -> injuryStatus == false)
         {
             updateInjuryStatus(player, true);
-            fprintf(stdout, 
-                    "INJURY: %s (%s) was injured during the match!\n", 
-                    player -> name, awayTeam -> name);
+
+            // // Print injury announcement
+            // fprintf(stdout, 
+            //         "INJURY: %s (%s) was injured during the match!\n", 
+            //         player -> name, awayTeam -> name);
         }
     }
 }

@@ -35,13 +35,16 @@ TEST_MATCH = $(BIN_DIR)/test_match
 TEST_LEAGUE = $(BIN_DIR)/test_league
 TEST_TOURNAMENT = $(BIN_DIR)/test_tournament
 
+# Main executable
+MAIN = $(BIN_DIR)/main
+
 
 
 # Phony targets --	Commands for our make file
-.PHONY: all clean dirs test_player test_team test_match test_league test_tournament tests
+.PHONY: all clean dirs test_player test_team test_match test_league test_tournament tests main
 
 # Default target --	when running 'make' from command line, just build all
-all: dirs $(TEST_PLAYER) $(TEST_TEAM) $(TEST_MATCH) $(TEST_LEAGUE) $(TEST_TOURNAMENT)
+all: dirs $(TEST_PLAYER) $(TEST_TEAM) $(TEST_MATCH) $(TEST_LEAGUE) $(TEST_TOURNAMENT) $(MAIN)
 
 
 
@@ -77,6 +80,10 @@ $(TEST_LEAGUE): $(BUILD_DIR)/test_league.o $(BUILD_DIR)/player.o $(BUILD_DIR)/te
 $(TEST_TOURNAMENT): $(BUILD_DIR)/test_tournament.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/league.o $(BUILD_DIR)/tournament.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
 	$(CC) $(CFLAGS) -lm $^ -o $@
 
+# Linking main file
+$(MAIN): $(BUILD_DIR)/main.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/league.o $(BUILD_DIR)/tournament.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
+	$(CC) $(CFLAGS) -lm $^ -o $@
+
 
 
 # Compile test files --	Compile test c files into test object files: 
@@ -90,6 +97,10 @@ $(BUILD_DIR)/test_match.o: $(TEST_DIR)/test_match.c
 $(BUILD_DIR)/test_league.o: $(TEST_DIR)/test_league.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 $(BUILD_DIR)/test_tournament.o: $(TEST_DIR)/test_tournament.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+
+# Compile main file
+$(BUILD_DIR)/main.o: $(SRC_DIR)/main.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 
@@ -117,6 +128,11 @@ test_tournament: $(TEST_TOURNAMENT)
 
 # Run all tests
 tests: test_player test_team test_match test_league test_tournament
+
+# Main target
+main: $(MAIN)
+	@echo "Running Main Program..."
+	@./$(MAIN)
 
 # Clean build files
 clean:

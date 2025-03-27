@@ -333,8 +333,9 @@ bool simulateMatchday(League* league)
         return false;
     }
 
-    fprintf(stdout, "Simulating Matchday %d of %s...\n", 
-            league -> currentMatchday + 1, league -> name);
+    // // Print which day we are simulating
+    // fprintf(stdout, "Simulating Matchday %d of %s...\n", 
+    //         league -> currentMatchday + 1, league -> name);
 
     // Simulate all matches for the current matchday
     for (int i = 0; i < league -> matchesPerMatchday[league -> currentMatchday]; i++)
@@ -353,9 +354,9 @@ bool simulateMatchday(League* league)
         // Simulate the match
         simulateMatch(match);
         
-        // Print the result
-        printf("  ");
-        printMatchResult(match);
+        // // Print the result
+        // printf("  ");
+        // printMatchResult(match);
     }
 
     // Advance to next matchday
@@ -429,12 +430,12 @@ void simulateSeason(League* league)
         simulateMatchday(league);
         
         // Print current standings after each matchday
-        fprintf(stdout, "\nStandings after Matchday %d:\n", league -> currentMatchday);
-        printLeagueTable(league);
-        fprintf(stdout, "\n");
+        // fprintf(stdout, "\nStandings after Matchday %d:\n", league -> currentMatchday);
+        // printLeagueTable(league);
+        // fprintf(stdout, "\n");
     }
 
-    fprintf(stdout, "\nSeason complete! Final standings:\n");
+    fprintf(stdout, "\n%s Season complete! Final standings:\n", league->name);
     printLeagueTable(league);
 }
 
