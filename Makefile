@@ -33,14 +33,15 @@ TEST_PLAYER = $(BIN_DIR)/test_player
 TEST_TEAM = $(BIN_DIR)/test_team
 TEST_MATCH = $(BIN_DIR)/test_match
 TEST_LEAGUE = $(BIN_DIR)/test_league
+TEST_TOURNAMENT = $(BIN_DIR)/test_tournament
 
 
 
 # Phony targets --	Commands for our make file
-.PHONY: all clean dirs test_player test_team test_match test_league tests
+.PHONY: all clean dirs test_player test_team test_match test_league test_tournament tests
 
 # Default target --	when running 'make' from command line, just build all
-all: dirs $(TEST_PLAYER) $(TEST_TEAM) $(TEST_MATCH) $(TEST_LEAGUE)
+all: dirs $(TEST_PLAYER) $(TEST_TEAM) $(TEST_MATCH) $(TEST_LEAGUE) $(TEST_TOURNAMENT)
 
 
 
@@ -60,6 +61,8 @@ $(BUILD_DIR)/%.o: $(MODULES_DIR)/%.c
 $(BUILD_DIR)/%.o: $(UTILS_DIR)/%.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
+
+
 # Linking test files --	Link test and class object files together to make test
 # 						executables. '$^ -o $@' ~ link all dependency objects 
 # 						to output an executable.
@@ -69,8 +72,12 @@ $(TEST_TEAM): $(BUILD_DIR)/test_team.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o
 	$(CC) $(CFLAGS) $^ -o $@
 $(TEST_MATCH): $(BUILD_DIR)/test_match.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
 	$(CC) $(CFLAGS) $^ -o $@
-$(TEST_LEAGUE): $(BUILD_DIR)/test_league.o $(BUILD_DIR)/league.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
+$(TEST_LEAGUE): $(BUILD_DIR)/test_league.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/league.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
 	$(CC) $(CFLAGS) $^ -o $@
+$(TEST_TOURNAMENT): $(BUILD_DIR)/test_tournament.o $(BUILD_DIR)/player.o $(BUILD_DIR)/team.o $(BUILD_DIR)/match.o $(BUILD_DIR)/league.o $(BUILD_DIR)/tournament.o $(BUILD_DIR)/random_utils.o $(BUILD_DIR)/match_simulation.o
+	$(CC) $(CFLAGS) -lm $^ -o $@
+
+
 
 # Compile test files --	Compile test c files into test object files: 
 # 						'test/test.c => build/test.o'
@@ -81,6 +88,8 @@ $(BUILD_DIR)/test_team.o: $(TEST_DIR)/test_team.c
 $(BUILD_DIR)/test_match.o: $(TEST_DIR)/test_match.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 $(BUILD_DIR)/test_league.o: $(TEST_DIR)/test_league.c
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+$(BUILD_DIR)/test_tournament.o: $(TEST_DIR)/test_tournament.c
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
 
@@ -102,8 +111,12 @@ test_league: $(TEST_LEAGUE)
 	@echo "Running League Test..."
 	@./$(TEST_LEAGUE)
 
+test_tournament: $(TEST_TOURNAMENT)
+	@echo "Running Tournament Test..."
+	@./$(TEST_TOURNAMENT)
+
 # Run all tests
-tests: test_player test_team test_match test_league
+tests: test_player test_team test_match test_league test_tournament
 
 # Clean build files
 clean:
