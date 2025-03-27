@@ -36,6 +36,33 @@
 
 
 
+## Testing
+
+We conducted testing through various test files made for each class. Testing was done as I proceeded with the project and reconducted whenever changes were made to classes already defined & implemented. The makefile we constructed takes commands:
+
+0. **All**:
+    * Runs all commands
+
+1. **test_player**:
+    * Runs the test file for the `player` class
+
+2. **test_team**:
+    * Runs the test file for the `team` class
+
+3. **test_match**:
+    * Runs the test file for the `match` & `match_simulation` class
+
+4. **test_league**:
+    * Runs the test file for the `league` class
+
+5. **test_tournament**:
+    * Runs the test file for the `tournament` class
+
+6. **main**: 
+    * Runs the main simulation program, where we simulate the league phase of each of the 5 big leagues, and select the top teams to compete in the UCL
+
+
+
 ## Class Breakdown
 
 ### Player class
@@ -191,7 +218,3 @@ Some utility functions for generating random numbers & probabilities that we nee
     * initRandom()
     * randomProbability()
     * randomInt()
-
-
-
-## Testing
